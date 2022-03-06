@@ -1,0 +1,9 @@
+export const DASHBOARD = "/";
+export const LOGIN = "/login";
+export const SIGN_UP = "/sign-up";
+export const PROFILE = "/users/:userID";
+export const POST = "/posts/:postID";
+export const USER_FRIENDS = "/users/:userID/friends";
+export const SEARCH = "/search";
+export const EDIT_PROFILE = "/edit-profile";
+export const NOT_FOUND = "/not-found";
