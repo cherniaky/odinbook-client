@@ -11,7 +11,7 @@ const AuthProvider = ({ children }) => {
     async function login(email, password) {
         try {
             let response;
-
+           // setIsAuth(false);
             response = await AuthService.login(email, password);
             // console.log(response);
             Cookies.set("refreshToken", response.data.refreshToken, {
@@ -20,6 +20,28 @@ const AuthProvider = ({ children }) => {
             localStorage.setItem("token", response.data.accessToken);
             setIsAuth(true);
             setUser(response.data.user);
+
+              return true;
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
+    }
+
+    async function loginSample() {
+        try {
+            let response;
+            //setIsAuth(false);
+            response = await AuthService.loginAsGuest();
+            // console.log(response);
+            Cookies.set("refreshToken", response.data.refreshToken, {
+                expires: 15,
+            });
+            localStorage.setItem("token", response.data.accessToken);
+            setIsAuth(true);
+            setUser(response.data.user);
+
+             return true;
         } catch (error) {
             console.log(error);
             return error;
@@ -27,7 +49,9 @@ const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ isAuth, setIsAuth, user, setUser, login }}>
+        <AuthContext.Provider
+            value={{ isAuth, setIsAuth, user, setUser, login, loginSample }}
+        >
             {children}
         </AuthContext.Provider>
     );

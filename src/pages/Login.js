@@ -1,65 +1,126 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../contexts/authContext";
 import styled from "styled-components";
+import { Link, useNavigate } from "react-router-dom";
+import { type } from "@testing-library/user-event/dist/type";
 
 const LoginForm = styled.form`
     background-color: ${(props) => props.theme.cardBg};
     display: flex;
     flex-direction: column;
-    padding: 10px;
+    justify-content: space-between;
+    padding: 32px;
     margin: 20px;
     width: 30%;
+    box-shadow: ${(props) => props.theme.shadowColour} 0px 1px 2px;
+    border-radius: 40px;
 `;
-const EmailInput = styled.input.attrs((props) => ({
+
+const Input = styled.input`
+    background-color: ${(props) => props.theme.bodyBg};
+    border: 1px solid ${(props) => props.theme.borderColour};
+    padding: 6px;
+    margin: 5px 0 10px 0;
+    width: 100%;
+`;
+
+const EmailInput = styled(Input).attrs((props) => ({
     type: "email",
-}))`
-    background-color: ${(props) => props.theme.bodyBg};
+}))``;
 
-    padding: 10px;
-    margin: 10px 0;
-    width: 100%;
+const PasswordInput = styled(Input).attrs((props) => ({
+    type: "password",
+}))``;
+
+const LoginButton = styled.input.attrs((props) => ({
+    type: "submit",
+    value: "Login",
+}))`
+    cursor: pointer;
+    background-color: ${(props) => props.theme.headerColour};
+    color: ${(props) => props.theme.mainTitleColour};
+    padding: 6px;
+    margin: 5px 0;
+    box-shadow: ${(props) => props.theme.shadowColour} 0px 1px 2px;
+    &:hover {
+        opacity: 0.9;
+        box-shadow: none;
+    }
 `;
 
-const PasswordInput = styled.input.attrs((props) => ({
-    type: "password",
-}))`
-    background-color: ${(props) => props.theme.bodyBg};
+const LoginSampleButton = styled.button`
+    cursor: pointer;
+    background-color: green;
 
-    padding: 10px;
+    color: ${(props) => props.theme.mainTitleColour};
+    padding: 6px;
     margin: 10px 0;
-    width: 100%;
+    box-shadow: ${(props) => props.theme.shadowColour} 0px 1px 2px;
+    &:hover {
+        opacity: 0.9;
+        box-shadow: none;
+    }
+`;
+
+const InputGroup = styled.div`
+    margin: 10px 0;
 `;
 
 export const Login = () => {
-    const { login, isAuth, user } = useContext(AuthContext);
+    let navigate = useNavigate();
+
+    const { login, loginSample, setUser, setIsAuth, isAuth, user } =
+        useContext(AuthContext);
+
+    async function loginForm(e, loginCallback) {
+        try {
+            e.preventDefault();
+           
+            if (await loginCallback(email, password)) {
+               navigate(`/`);
+            } else {
+                setError("Invalid credentials");
+            }
+        } catch (error) {
+            return error;
+        }
+    }
 
     const [email, setEmail] = useState("");
+    const [error, setError] = useState("");
 
     const [password, setPassword] = useState("");
     return (
         <>
-            <LoginForm
-                onSubmit={async (e) => {
-                    e.preventDefault();
-                    await login("yurii.cherniak@gmail.com", "123456");
-                    // console.log(isAuth);
-                    // console.log(user );
-                }}
-            >
-                <EmailInput
-                    value={email}
-                    onChange={(e) => {
-                        setEmail(e.target.value);
-                    }}
-                />
-                <PasswordInput
-                    value={password}
-                    onChange={(e) => {
-                        setPassword(e.target.value);
-                    }}
-                />
+            <LoginForm onSubmit={(e) => loginForm(e, login)}>
+                {error}
+                <InputGroup>
+                    <label htmlFor="email">Email:</label>
+                    <EmailInput
+                        required
+                        id="email"
+                        value={email}
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                        }}
+                    />
+                </InputGroup>
+                <InputGroup>
+                    <label htmlFor="pass">Password:</label>
+                    <PasswordInput
+                        required
+                        id="pass"
+                        value={password}
+                        onChange={(e) => {
+                            setPassword(e.target.value);
+                        }}
+                    />
+                </InputGroup>
 
-                <input type="submit" value="Login" />
+                <LoginButton />
+                <LoginSampleButton onClick={(e) => loginForm(e, loginSample)}>
+                    Sign in with sample account
+                </LoginSampleButton>
             </LoginForm>
         </>
     );
