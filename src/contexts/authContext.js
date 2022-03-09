@@ -1,56 +1,149 @@
 import React, { createContext, useReducer, useEffect, useState } from "react";
 import AuthService from "../services/AuthService";
 import Cookies from "js-cookie";
+import axios from "axios";
+import { API_URL } from "../http";
 
 const AuthContext = createContext();
 
+const authReducer = async (authState, action) => {
+    switch (action.type) {
+        case "login": {
+            try {
+                const { email, password } = action.payload;
+                //  const socket = connectSocket(userID);
+                //let response;
+                // setIsAuth(false);
+                let response = await AuthService.login(email, password);
+                // console.log(response);
+                Cookies.set("refreshToken", response.data.refreshToken, {
+                    expires: 15,
+                });
+                localStorage.setItem("token", response.data.accessToken);
+
+                return {
+                    ...authState,
+                    isAuth: true,
+                    token: response.data.accessToken,
+                    user: response.data.user,
+                    socket: "",
+                };
+            } catch (error) {
+                return {
+                    ...authState,
+                    error: "Invalid credentials",
+                };
+            }
+        }
+        case "loginSample": {
+            try {
+                //const { email, password } = action.payload;
+                //  const socket = connectSocket(userID);
+                let response;
+                //setIsAuth(false);
+                response = await AuthService.loginAsGuest();
+
+                //console.log(response);
+                Cookies.set("refreshToken", response.data.refreshToken, {
+                    expires: 15,
+                });
+                localStorage.setItem("token", response.data.accessToken);
+                //  setIsAuth(true);
+                // console.log("is auth", isAuth);
+                // setUser(response.data.user);
+
+                return {
+                    ...authState,
+                    isAuth: true,
+                    token: response.data.accessToken,
+                    user: response.data.user,
+                    socket: "",
+                };
+            } catch (error) {
+                return {
+                    ...authState,
+                    error: "login sample eroor",
+                };
+            }
+        }
+        case "checkAuth": {
+            try {
+                const response = await axios.get(`${API_URL}/auth/refresh`, {
+                    withCredentials: true,
+                });
+                Cookies.set("refreshToken", response.data.refreshToken, {
+                    expires: 15,
+                });
+                //console.log(response.data)
+                localStorage.setItem("token", response.data.accessToken);
+                // let i = true;
+                // setIsAuth(true);
+                //setUser(response.data.user);
+                return {
+                    ...authState,
+                    isAuth: true,
+                    token: response.data.accessToken,
+                    user: response.data.user,
+                    socket: "",
+                };
+            } catch (error) {
+                return {
+                    ...authState,
+                    error: "check auth eroor",
+                };
+            }
+        }
+        case "logout": {
+            localStorage.clear();
+            // disconnectFromSocket();
+            return {
+                ...authState,
+                isAuth: false,
+                user: {},
+                token: "",
+                socket: "",
+                error: null,
+            };
+        }
+        default:
+            return authState;
+    }
+};
+
 const AuthProvider = ({ children }) => {
-    const [isAuth, setIsAuth] = useState(false);
-    const [user, setUser] = useState({});
+    // const [isAuth, setIsAuth] = useState(false);
+    const initialState = {
+        isAuth: false,
+        token: null,
+        user: null,
+        socket: null,
+        error: null,
+    };
+    const [authState, dispatch] = useReducer(authReducer, initialState);
 
-    async function login(email, password) {
-        try {
-            let response;
-           // setIsAuth(false);
-            response = await AuthService.login(email, password);
-            // console.log(response);
-            Cookies.set("refreshToken", response.data.refreshToken, {
-                expires: 15,
+    useEffect(() => {
+        if (localStorage.getItem("token")) {
+            dispatch({
+                type: "checkAuth",
             });
-            localStorage.setItem("token", response.data.accessToken);
-            setIsAuth(true);
-            setUser(response.data.user);
-
-              return true;
-        } catch (error) {
-            console.log(error);
-            return error;
         }
-    }
 
-    async function loginSample() {
-        try {
-            let response;
-            //setIsAuth(false);
-            response = await AuthService.loginAsGuest();
-            // console.log(response);
-            Cookies.set("refreshToken", response.data.refreshToken, {
-                expires: 15,
-            });
-            localStorage.setItem("token", response.data.accessToken);
-            setIsAuth(true);
-            setUser(response.data.user);
+        return () => {};
+    }, []);
 
-             return true;
-        } catch (error) {
-            console.log(error);
-            return error;
-        }
-    }
+    const [authStateCopy, setAuthStateCopy] = useState(initialState);
+    useEffect(async () => {
+        //console.log(await authState);
+        setAuthStateCopy(await authState);
+        return () => {};
+    }, [authState]);
 
     return (
         <AuthContext.Provider
-            value={{ isAuth, setIsAuth, user, setUser, login, loginSample }}
+            value={{
+                authState: authStateCopy,
+                dispatch,   
+            }}
         >
             {children}
         </AuthContext.Provider>

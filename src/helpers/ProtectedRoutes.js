@@ -1,6 +1,16 @@
+import { observer } from "mobx-react-lite";
+import { useContext, useEffect } from "react";
 import { Route, Navigate, Outlet } from "react-router-dom";
+import { storeContext } from "..";
 import * as ROUTES from "./ROUTES";
 
-export default function ProtectedRoute({ isAuth }) {
-    return isAuth ? <Outlet /> : <Navigate to={ROUTES.LOGIN} />;
+function ProtectedRoute({ isAuth }) {
+   // const { store } = useContext(storeContext);
+
+    if (!isAuth) {
+        return <Navigate to={ROUTES.LOGIN} />;
+    }
+
+    return <Outlet />;
 }
+export default observer(ProtectedRoute);

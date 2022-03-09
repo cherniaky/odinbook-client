@@ -3,6 +3,8 @@ import { AuthContext } from "../contexts/authContext";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { type } from "@testing-library/user-event/dist/type";
+import { storeContext } from "..";
+import { observer } from "mobx-react-lite";
 
 const LoginForm = styled.form`
     background-color: ${(props) => props.theme.cardBg};
@@ -34,7 +36,7 @@ const PasswordInput = styled(Input).attrs((props) => ({
 
 const LoginButton = styled.input.attrs((props) => ({
     type: "submit",
-    value: "Login",
+    value: "Log in",
 }))`
     cursor: pointer;
     background-color: ${(props) => props.theme.headerColour};
@@ -66,34 +68,59 @@ const InputGroup = styled.div`
     margin: 10px 0;
 `;
 
-export const Login = () => {
+  const ErrorDiv = styled.div`
+      width: 100%;
+      color: white;
+      background-color: rgb(209, 62, 62);
+      padding: 10px;
+      text-align: center;
+      border-radius: 6px;
+  `;
+
+function Login() {
     let navigate = useNavigate();
 
-    const { login, loginSample, setUser, setIsAuth, isAuth, user } =
-        useContext(AuthContext);
+    const { authState, dispatch } = useContext(AuthContext);
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    
 
     async function loginForm(e, loginCallback) {
         try {
             e.preventDefault();
-           
-            if (await loginCallback(email, password)) {
-               navigate(`/`);
-            } else {
-                setError("Invalid credentials");
-            }
+            console.log("login");
+            await loginCallback(email, password);
+            // setIsAuth(true);
+            console.log("login2");
+            // navigate("/");
         } catch (error) {
+            console.log(error);
             return error;
         }
     }
 
-    const [email, setEmail] = useState("");
-    const [error, setError] = useState("");
+    
 
-    const [password, setPassword] = useState("");
     return (
         <>
-            <LoginForm onSubmit={(e) => loginForm(e, login)}>
-                {error}
+            <LoginForm
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    dispatch({
+                        type: "login",
+                        payload: {
+                            email,
+                            password,
+                        },
+                    });
+                    navigate("/");
+                }}
+            >
+                {authState.error ? (
+                    <ErrorDiv>{authState.error}</ErrorDiv>
+                ) : null}
+
                 <InputGroup>
                     <label htmlFor="email">Email:</label>
                     <EmailInput
@@ -118,10 +145,21 @@ export const Login = () => {
                 </InputGroup>
 
                 <LoginButton />
-                <LoginSampleButton onClick={(e) => loginForm(e, loginSample)}>
-                    Sign in with sample account
+                <LoginSampleButton
+                    onClick={(e) => {
+                        e.preventDefault();
+
+                        dispatch({
+                            type: "loginSample",
+                        });
+                        navigate("/");
+                    }}
+                >
+                    Log in with sample account
                 </LoginSampleButton>
             </LoginForm>
         </>
     );
-};
+}
+
+export default observer(Login);
