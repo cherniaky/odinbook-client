@@ -1,5 +1,4 @@
 import "./styles/App.css";
-import { observer } from "mobx-react-lite";
 import GlobalStyle from "./styles/GlobalStyle";
 import styled, { ThemeProvider } from "styled-components";
 import React, { useContext, useEffect, useState } from "react";
@@ -9,7 +8,7 @@ import ProtectedRoute from "./helpers/ProtectedRoutes";
 import Login from "./pages/Login";
 import { AuthContext, AuthProvider } from "./contexts/authContext";
 import * as ROUTES from "./helpers/ROUTES";
-import { storeContext } from ".";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const AppDiv = styled.div`
     display: flex;
@@ -20,11 +19,16 @@ const AppDiv = styled.div`
 function App() {
     const [theme, toggleTheme] = useState("light");
 
-    const { authState, dispatch  } = useContext(AuthContext);
+    const { authState, dispatch } = useContext(AuthContext);
 
-   if (authState.loading) {
-       return <>Loading...</>
-   }
+    if (authState.loading) {
+        return (
+            <AppDiv>
+                {" "}
+                <ClipLoader color="lightblue" loading={true} size={150} />
+            </AppDiv>
+        );
+    }
 
     return (
         <>
@@ -66,7 +70,6 @@ function App() {
                                 path="/"
                                 element={<>secrete</>}
                             ></Route>
-
                         </Route>
                     </Routes>
                 </AppDiv>
@@ -75,4 +78,4 @@ function App() {
     );
 }
 
-export default observer(App);
+export default App;

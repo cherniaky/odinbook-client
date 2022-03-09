@@ -2,9 +2,6 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../contexts/authContext";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import { type } from "@testing-library/user-event/dist/type";
-import { storeContext } from "..";
-import { observer } from "mobx-react-lite";
 
 const LoginForm = styled.form`
     background-color: ${(props) => props.theme.cardBg};
@@ -40,10 +37,10 @@ const LoginButton = styled.input.attrs((props) => ({
 }))`
     cursor: pointer;
     background-color: ${(props) => props.theme.headerColour};
-    color: ${(props) => props.theme.mainTitleColour};
+    color: white;
     padding: 6px;
     margin: 5px 0;
-    box-shadow: ${(props) => props.theme.shadowColour} 0px 1px 2px;
+    box-shadow: ${(props) => props.theme.shadowColour} 0px 2px 2px;
     &:hover {
         opacity: 0.9;
         box-shadow: none;
@@ -54,10 +51,10 @@ const LoginSampleButton = styled.button`
     cursor: pointer;
     background-color: green;
 
-    color: ${(props) => props.theme.mainTitleColour};
+    color:white;
     padding: 6px;
     margin: 10px 0;
-    box-shadow: ${(props) => props.theme.shadowColour} 0px 1px 2px;
+    box-shadow: ${(props) => props.theme.shadowColour} 0px 2px 2px;
     &:hover {
         opacity: 0.9;
         box-shadow: none;
@@ -148,4 +145,4 @@ function Login() {
     );
 }
 
-export default observer(Login);
+export default Login;
