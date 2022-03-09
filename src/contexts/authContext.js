@@ -6,7 +6,8 @@ import { API_URL } from "../http";
 
 const AuthContext = createContext();
 
-const authReducer = async (authState, action) => {
+const authReducer = async (authStatePromise, action) => {
+    const authState = await authStatePromise;
     switch (action.type) {
         case "login": {
             try {
@@ -105,6 +106,15 @@ const authReducer = async (authState, action) => {
                 error: null,
             };
         }
+        case "toggleLoading": {
+            //localStorage.clear();
+            // disconnectFromSocket();
+          //  console.log(authState);
+            return {
+                ...authState,
+                loading: !authState.loading,
+            };
+        }
         default:
             return authState;
     }
@@ -118,8 +128,10 @@ const AuthProvider = ({ children }) => {
         user: null,
         socket: null,
         error: null,
+        loading: true,
     };
     const [authState, dispatch] = useReducer(authReducer, initialState);
+    const [authStateCopy, setAuthStateCopy] = useState(initialState);
 
     useEffect(() => {
         if (localStorage.getItem("token")) {
@@ -127,13 +139,14 @@ const AuthProvider = ({ children }) => {
                 type: "checkAuth",
             });
         }
+        dispatch({
+            type: "toggleLoading",
+        });
 
         return () => {};
     }, []);
 
-    const [authStateCopy, setAuthStateCopy] = useState(initialState);
     useEffect(async () => {
-        //console.log(await authState);
         setAuthStateCopy(await authState);
         return () => {};
     }, [authState]);
@@ -142,7 +155,7 @@ const AuthProvider = ({ children }) => {
         <AuthContext.Provider
             value={{
                 authState: authStateCopy,
-                dispatch,   
+                dispatch,
             }}
         >
             {children}

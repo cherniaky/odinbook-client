@@ -68,14 +68,14 @@ const InputGroup = styled.div`
     margin: 10px 0;
 `;
 
-  const ErrorDiv = styled.div`
-      width: 100%;
-      color: white;
-      background-color: rgb(209, 62, 62);
-      padding: 10px;
-      text-align: center;
-      border-radius: 6px;
-  `;
+const ErrorDiv = styled.div`
+    width: 100%;
+    color: white;
+    background-color: rgb(209, 62, 62);
+    padding: 10px;
+    text-align: center;
+    border-radius: 6px;
+`;
 
 function Login() {
     let navigate = useNavigate();
@@ -84,29 +84,13 @@ function Login() {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    
-
-    async function loginForm(e, loginCallback) {
-        try {
-            e.preventDefault();
-            console.log("login");
-            await loginCallback(email, password);
-            // setIsAuth(true);
-            console.log("login2");
-            // navigate("/");
-        } catch (error) {
-            console.log(error);
-            return error;
-        }
-    }
-
-    
-
+   
     return (
         <>
             <LoginForm
                 onSubmit={(e) => {
                     e.preventDefault();
+                   
                     dispatch({
                         type: "login",
                         payload: {
@@ -114,7 +98,8 @@ function Login() {
                             password,
                         },
                     });
-                    navigate("/");
+                   
+                    //navigate("/");
                 }}
             >
                 {authState.error ? (
@@ -148,11 +133,12 @@ function Login() {
                 <LoginSampleButton
                     onClick={(e) => {
                         e.preventDefault();
-
+                        
                         dispatch({
                             type: "loginSample",
                         });
-                        navigate("/");
+                        
+                        // navigate("/");
                     }}
                 >
                     Log in with sample account

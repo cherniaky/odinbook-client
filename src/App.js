@@ -20,7 +20,11 @@ const AppDiv = styled.div`
 function App() {
     const [theme, toggleTheme] = useState("light");
 
-    const { authState, dispatch } = useContext(AuthContext);
+    const { authState, dispatch  } = useContext(AuthContext);
+
+   if (authState.loading) {
+       return <>Loading...</>
+   }
 
     return (
         <>
