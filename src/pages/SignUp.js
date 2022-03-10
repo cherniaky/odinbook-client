@@ -1,8 +1,7 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../contexts/authContext";
 import styled from "styled-components";
-import { Link, Routes, useNavigate } from "react-router-dom";
-import FacebookLogin from "react-facebook-login";
+import { Link, useNavigate } from "react-router-dom";
 import * as ROUTES from "../helpers/ROUTES";
 
 const LoginForm = styled.form`
@@ -25,7 +24,6 @@ const LoginForm = styled.form`
     @media screen and (max-width: 460px) {
         width: 90%;
     }
-
 `;
 
 const Input = styled.input`
@@ -39,14 +37,19 @@ const Input = styled.input`
 const EmailInput = styled(Input).attrs((props) => ({
     type: "email",
 }))``;
+const NameInput = styled(Input).attrs((props) => ({
+    type: "text",
+}))`
+    width: 95%;
+`;
 
 const PasswordInput = styled(Input).attrs((props) => ({
     type: "password",
 }))``;
 
-const LoginButton = styled.input.attrs((props) => ({
+const SignUpButton = styled.input.attrs((props) => ({
     type: "submit",
-    value: "Log in",
+    value: "Sign up",
 }))`
     cursor: pointer;
     background-color: ${(props) => props.theme.headerColour};
@@ -76,6 +79,12 @@ const LoginSampleButton = styled.button`
 
 const InputGroup = styled.div`
     margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+`;
+const InputNameGroup = styled.div`
+    margin: 10px 0;
+    display: flex;
 `;
 
 const ErrorDiv = styled.div`
@@ -107,80 +116,66 @@ const Or = styled.div`
     align-self: center;
 `;
 
-const LoginHeader = styled.h1`
-  font-size: 25px;
-  font-weight: bold;
-  align-self: center;
-`;
-const LoginDescription = styled.div`
-  align-self: center;
-  text-align: center;
-  margin: 10px 0;
-  & a{
-      color: blue;
-      
-  }
-`;
-
 const FacebookLoginContainer = styled.div`
     display: flex;
     justify-content: center;
 `;
+const LoginHeader = styled.h1`
+    font-size: 25px;
+    font-weight: bold;
+    align-self: center;
+`;
+const LoginDescription = styled.div`
+    align-self: center;
+    text-align: center;
+    margin: 10px 0;
+    & a {
+        color: blue;
+    }
+`;
 
-function Login() {
-    let navigate = useNavigate();
-    
+function SignUp() {
+     const navigate = useNavigate();
+
     const { authState, dispatch } = useContext(AuthContext);
-    
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
 
-    const responseFacebook = (response) => {
-        //console.log(response);
-        let firstName,familyName;
-    
-        if (response.name.includes(" ")) {
-            firstName=response.name.split(" ")[0]
-            familyName=response.name.split(" ")[1]
-        }
-        else{
-            firstName=response.name;
-        }
-    
-        dispatch({
-            type: "loginFacebook",
-            payload: {
-                facebookId:response.id,
-                email:response.email,
-                profilePic:response.picture.data.url,
-                firstName,
-                familyName,
-            },
-        });
-    };
+    const [email, setEmail] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [familyName, setFamilyName] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [confirmError, setConfirmError] = useState("");
 
     return (
         <>
             <LoginForm
                 onSubmit={(e) => {
                     e.preventDefault();
-
+                    if (password != confirmPassword) {
+                        setConfirmError("Confirm password are not equal");
+                        return;
+                    }
                     dispatch({
-                        type: "login",
+                        type: "signUp",
                         payload: {
                             email,
+                            firstName,
+                            familyName,
                             password,
+                            confirmPassword,
                         },
                     });
 
-                    //navigate("/");
+                    navigate(ROUTES.LOGIN);
                 }}
             >
-                <LoginHeader>Log in</LoginHeader>
+                <LoginHeader>Sign up</LoginHeader>
 
-                <LoginDescription>Don't have an account? 
-                <Link to={ROUTES.SIGN_UP}> Sign Up</Link>
+                <LoginDescription>
+                    Already have an account?
+                    <Link to={ROUTES.LOGIN}> Log in</Link>
                 </LoginDescription>
+
                 {authState.error ? (
                     <ErrorDiv>{authState.error}</ErrorDiv>
                 ) : null}
@@ -196,6 +191,31 @@ function Login() {
                         }}
                     />
                 </InputGroup>
+
+                <InputNameGroup>
+                    <InputGroup>
+                        <label htmlFor="fname">First name:</label>
+                        <NameInput
+                            required
+                            id="fname"
+                            value={firstName}
+                            onChange={(e) => {
+                                setFirstName(e.target.value);
+                            }}
+                        />
+                    </InputGroup>
+                    <InputGroup>
+                        <label htmlFor="lname">Family name:</label>
+                        <NameInput
+                            required
+                            id="lname"
+                            value={familyName}
+                            onChange={(e) => {
+                                setFamilyName(e.target.value);
+                            }}
+                        />
+                    </InputGroup>
+                </InputNameGroup>
                 <InputGroup>
                     <label htmlFor="pass">Password:</label>
                     <PasswordInput
@@ -208,34 +228,24 @@ function Login() {
                     />
                 </InputGroup>
 
-                <LoginButton />
-                <LoginSampleButton
-                    onClick={(e) => {
-                        e.preventDefault();
+                {confirmError ? <ErrorDiv>{confirmError}</ErrorDiv> : null}
 
-                        dispatch({
-                            type: "loginSample",
-                        });
-
-                        // navigate("/");
-                    }}
-                >
-                    Log in with sample account
-                </LoginSampleButton>
-                <LineOr />
-                <Or>OR</Or>
-                <FacebookLoginContainer>
-                    <FacebookLogin
-                        appId="3201779453423648"
-                        autoLoad={false}
-                        fields="name,email,picture"
-                        onClick={() => console.log("click")}
-                        callback={responseFacebook}
+                <InputGroup>
+                    <label htmlFor="cpass">Confirm Password:</label>
+                    <PasswordInput
+                        required
+                        id="cpass"
+                        value={confirmPassword}
+                        onChange={(e) => {
+                            setConfirmPassword(e.target.value);
+                        }}
                     />
-                </FacebookLoginContainer>
+                </InputGroup>
+
+                <SignUpButton />
             </LoginForm>
         </>
     );
 }
 
-export default Login;
+export default SignUp;

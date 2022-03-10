@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import { AuthContext, AuthProvider } from "./contexts/authContext";
 import * as ROUTES from "./helpers/ROUTES";
 import ClipLoader from "react-spinners/ClipLoader";
+import SignUp from "./pages/SignUp";
 
 const AppDiv = styled.div`
     display: flex;
@@ -62,7 +63,7 @@ function App() {
                                 authState.isAuth ? (
                                     <Navigate to={ROUTES.DASHBOARD} />
                                 ) : (
-                                    <>sign</>
+                                    <SignUp/>
                                 )
                             }
                         ></Route>

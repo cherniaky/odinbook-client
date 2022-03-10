@@ -10,6 +10,15 @@ export default class AuthService {
             }
         );
     }
+    static async signUp(email, firstName, familyName, password ,password2) {
+        return $api.post(
+            "auth/sign-up",
+            { email, firstName, familyName, password ,password2 },
+            {
+                withCredentials: true,
+            }
+        );
+    }
     static async loginFacebook(
         facebookId,
         email,
