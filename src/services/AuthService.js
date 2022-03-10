@@ -10,6 +10,21 @@ export default class AuthService {
             }
         );
     }
+    static async loginFacebook(
+        facebookId,
+        email,
+        profilePic,
+        firstName,
+        familyName
+    ) {
+        return $api.post(
+            "auth/login/facebook",
+            { facebookId, email, profilePic, firstName, familyName },
+            {
+                withCredentials: true,
+            }
+        );
+    }
     static async loginAsGuest() {
         return $api.post(
             "auth/login",

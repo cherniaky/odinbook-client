@@ -75,7 +75,6 @@ h4 {
 }
 
 
-
 `;
 
 export default GlobalStyle;

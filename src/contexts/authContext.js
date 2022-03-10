@@ -36,6 +36,40 @@ const authReducer = async (authStatePromise, action) => {
                 };
             }
         }
+        case "loginFacebook": {
+            try {
+                const { facebookId, email, profilePic, firstName, familyName } =
+                    action.payload;
+                //  const socket = connectSocket(userID);
+                //let response;
+                // setIsAuth(false);
+                let response = await AuthService.loginFacebook(
+                    facebookId,
+                    email,
+                    profilePic,
+                    firstName,
+                    familyName
+                );
+                // console.log(response);
+                Cookies.set("refreshToken", response.data.refreshToken, {
+                    expires: 15,
+                });
+                localStorage.setItem("token", response.data.accessToken);
+
+                return {
+                    ...authState,
+                    isAuth: true,
+                    token: response.data.accessToken,
+                    user: response.data.user,
+                    socket: "",
+                };
+            } catch (error) {
+                return {
+                    ...authState,
+                    error: "Invalid credentials",
+                };
+            }
+        }
         case "loginSample": {
             try {
                 //const { email, password } = action.payload;

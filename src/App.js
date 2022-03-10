@@ -16,6 +16,14 @@ const AppDiv = styled.div`
     align-items: center;
 `;
 
+const LoaderDiv = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+`;
+
 function App() {
     const [theme, toggleTheme] = useState("light");
 
@@ -23,10 +31,10 @@ function App() {
 
     if (authState.loading) {
         return (
-            <AppDiv>
+            <LoaderDiv>
                 {" "}
                 <ClipLoader color="lightblue" loading={true} size={150} />
-            </AppDiv>
+            </LoaderDiv>
         );
     }
 
