@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/authContext";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
@@ -52,7 +52,7 @@ const SignUpButton = styled.input.attrs((props) => ({
     value: "Sign up",
 }))`
     cursor: pointer;
-    background-color: ${(props) => props.theme.headerColour};
+    background-color: ${(props) => props.theme.buttonColour};
     color: white;
     padding: 6px;
     margin: 5px 0;
@@ -63,19 +63,7 @@ const SignUpButton = styled.input.attrs((props) => ({
     }
 `;
 
-const LoginSampleButton = styled.button`
-    cursor: pointer;
-    background-color: green;
 
-    color: white;
-    padding: 6px;
-    margin: 10px 0;
-    box-shadow: ${(props) => props.theme.shadowColour} 0px 2px 2px;
-    &:hover {
-        opacity: 0.9;
-        box-shadow: none;
-    }
-`;
 
 const InputGroup = styled.div`
     margin: 10px 0;
@@ -96,30 +84,6 @@ const ErrorDiv = styled.div`
     border-radius: 6px;
 `;
 
-const LineOr = styled.hr`
-    margin-top: 30px;
-    position: relative;
-    top: 12px;
-    border-top: 2px solid ${(props) => props.theme.borderColour};
-`;
-
-const Or = styled.div`
-    position: relative;
-    top: -10px;
-    background-color: ${(props) => props.theme.cardBg};
-    z-index: 10;
-    padding: 10px;
-    font-weight: bold;
-    border-radius: 50%;
-    border: 1px solid ${(props) => props.theme.borderColour};
-    width: min-content;
-    align-self: center;
-`;
-
-const FacebookLoginContainer = styled.div`
-    display: flex;
-    justify-content: center;
-`;
 const LoginHeader = styled.h1`
     font-size: 25px;
     font-weight: bold;
@@ -130,7 +94,8 @@ const LoginDescription = styled.div`
     text-align: center;
     margin: 10px 0;
     & a {
-        color: blue;
+        font-weight: bold;
+        color: ${(props) => props.theme.linkColour};
     }
 `;
 
@@ -145,6 +110,13 @@ function SignUp() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [confirmError, setConfirmError] = useState("");
+
+    useEffect(() => {
+        dispatch({
+            type: "deleteError",
+        });
+        return () => {};
+    }, []);
 
     return (
         <>

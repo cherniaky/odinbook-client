@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/authContext";
 import styled from "styled-components";
 import { Link, Routes, useNavigate } from "react-router-dom";
@@ -49,7 +49,7 @@ const LoginButton = styled.input.attrs((props) => ({
     value: "Log in",
 }))`
     cursor: pointer;
-    background-color: ${(props) => props.theme.headerColour};
+    background-color: ${(props) => props.theme.buttonColour};
     color: white;
     padding: 6px;
     margin: 5px 0;
@@ -113,13 +113,13 @@ const LoginHeader = styled.h1`
   align-self: center;
 `;
 const LoginDescription = styled.div`
-  align-self: center;
-  text-align: center;
-  margin: 10px 0;
-  & a{
-      color: blue;
-      
-  }
+    align-self: center;
+    text-align: center;
+    margin: 10px 0;
+    & a {
+        font-weight: bold;
+        color: ${(props) => props.theme.linkColour};
+    }
 `;
 
 const FacebookLoginContainer = styled.div`
@@ -127,7 +127,7 @@ const FacebookLoginContainer = styled.div`
     justify-content: center;
 `;
 
-function Login() {
+function Login() {  
     let navigate = useNavigate();
     
     const { authState, dispatch } = useContext(AuthContext);
@@ -135,6 +135,16 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    useEffect(() => {
+      
+        dispatch({
+            type:"deleteError"
+        })
+      return () => {
+        
+      }
+    }, [])
+    
     const responseFacebook = (response) => {
         //console.log(response);
         let firstName,familyName;

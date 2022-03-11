@@ -53,7 +53,7 @@ const authReducer = async (authStatePromise, action) => {
                     firstName,
                     familyName,
                     password,
-                    confirmPassword,
+                    confirmPassword
                 );
                 // console.log(response);
                 // Cookies.set("refreshToken", response.data.refreshToken, {
@@ -64,9 +64,9 @@ const authReducer = async (authStatePromise, action) => {
                 return {
                     ...authState,
                     //isAuth: true,
-                   // token: response.data.accessToken,
-                   // user: response.data.user,
-                   // socket: "",
+                    // token: response.data.accessToken,
+                    // user: response.data.user,
+                    // socket: "",
                 };
             } catch (error) {
                 return {
@@ -163,29 +163,47 @@ const authReducer = async (authStatePromise, action) => {
             } catch (error) {
                 return {
                     ...authState,
-                    error: "check auth eroor",
+                    error: "check auth error",
                 };
             }
         }
         case "logout": {
-            localStorage.clear();
-            // disconnectFromSocket();
-            return {
-                ...authState,
-                isAuth: false,
-                user: {},
-                token: "",
-                socket: "",
-                error: null,
-            };
+            try {
+                await AuthService.logout();
+                Cookies.remove("refreshToken");
+                localStorage.removeItem("token");
+                //localStorage.clear();
+                // disconnectFromSocket();
+                return {
+                    ...authState,
+                    isAuth: false,
+                    user: {},
+                    token: "",
+                    socket: "",
+                    error: null,
+                };
+            } catch (error) {
+                console.log(error);
+                return {
+                    ...authState,
+                    error: "logout error",
+                };
+            }
         }
         case "toggleLoading": {
             //localStorage.clear();
             // disconnectFromSocket();
-          //  console.log(authState);
+            //  console.log(authState);
             return {
                 ...authState,
                 loading: !authState.loading,
+            };
+        }
+        case "deleteError": {
+           
+            return {
+                ...authState,
+                error: null,
             };
         }
         default:
@@ -223,7 +241,7 @@ const AuthProvider = ({ children }) => {
         async function update() {
             setAuthStateCopy(await authState);
         }
-        update()
+        update();
         return () => {};
     }, [authState]);
 

@@ -10,11 +10,14 @@ import { AuthContext, AuthProvider } from "./contexts/authContext";
 import * as ROUTES from "./helpers/ROUTES";
 import ClipLoader from "react-spinners/ClipLoader";
 import SignUp from "./pages/SignUp";
+import { NavBar } from "./components/NavBar";
+import Dashboard from "./pages/Dashboard";
 
 const AppDiv = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 70px;
 `;
 
 const LoaderDiv = styled.div`
@@ -26,7 +29,14 @@ const LoaderDiv = styled.div`
 `;
 
 function App() {
-    const [theme, toggleTheme] = useState("light");
+    const [theme, setTheme] = useState("light");
+
+     function toggleTheme() {
+        if (theme=="light") {
+           return setTheme("dark")
+        }
+        return setTheme("light");
+    }
 
     const { authState, dispatch } = useContext(AuthContext);
 
@@ -42,8 +52,9 @@ function App() {
     return (
         <>
             <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
+                <GlobalStyle />
+                <NavBar toggleTheme={toggleTheme}/>
                 <AppDiv>
-                    <GlobalStyle />
                     <Routes>
                         <Route
                             exact
@@ -63,7 +74,7 @@ function App() {
                                 authState.isAuth ? (
                                     <Navigate to={ROUTES.DASHBOARD} />
                                 ) : (
-                                    <SignUp/>
+                                    <SignUp />
                                 )
                             }
                         ></Route>
@@ -76,8 +87,8 @@ function App() {
                         >
                             <Route
                                 exact
-                                path="/"
-                                element={<>secrete</>}
+                                path={ROUTES.DASHBOARD}
+                                element={<Dashboard/>}
                             ></Route>
                         </Route>
                     </Routes>
