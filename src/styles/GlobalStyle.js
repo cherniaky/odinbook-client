@@ -10,7 +10,7 @@ const GlobalStyle = createGlobalStyle`
   box-sizing:border-box;
   font: inherit;
   vertical-align: baseline;
-   transition: background-color 0.30s linear;
+   transition: 0.30s linear;
 }
 /* HTML5 display-role reset for older browsers */
 article,
