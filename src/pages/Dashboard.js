@@ -4,6 +4,7 @@ import { Link, Routes, useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { AuthContext } from "../contexts/authContext";
 import PostsService from "../services/PostsService";
+import Post from "../components/Post";
 
 const DashboardContainer = styled.div`
     width: 55%;
@@ -19,10 +20,10 @@ const TogglePostButton = styled.button`
 `;
 const fadeIn = keyframes`
   0% {
-   transform: translateY(-100px);
+   transform: translateY(0px);
   }
   100% {
-   //transform: scaleY(1);
+   transform: translateY(-100px);
   }
 `;
 const PostForm = styled.div`
@@ -36,8 +37,9 @@ const PostForm = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    transform: ${(props) =>
+        props.show ? "translateY(0px)" : "translateY(-150px)"};
     align-items: center;
-    animation: 0.2s ${fadeIn} linear;
     animation-iteration-count: 1;
 `;
 
@@ -46,11 +48,11 @@ const PostTextArea = styled.textarea`
     width: 100%;
     resize: none;
     color: ${({ theme }) => theme.mainFontColour};
-    // height: 60px;
     border-bottom: 1px solid ${({ theme }) => theme.mainFontColour};
 `;
 const OverflowHidden = styled.div`
     overflow: hidden;
+    margin-bottom: 20px;
 `;
 
 const PostSubmit = styled.button`
@@ -62,6 +64,10 @@ const PostSubmit = styled.button`
     padding: 10px;
     border-radius: 10px;
 `;
+const PostsContainer = styled.div`
+    transform: ${(props) =>
+        props.show ? "translateY(0)" : "translateY(-130px)"};
+`;
 const Dashboard = () => {
     const [showPostForm, setShowPostForm] = useState(false);
     const [PostValue, setPostValue] = useState("");
@@ -71,19 +77,29 @@ const Dashboard = () => {
     }
 
     useEffect(() => {
-      async function getPosts() {
-          let response = await PostsService.getPosts();
+        async function getPosts() {
+            let response = await PostsService.getPosts();
 
-          //console.log(response.data);
-          setPosts(response.data);
-      }
-      getPosts()
-    
-      return () => {
-        
-      }
-    }, [])
-    
+            // console.log(response.data);
+            // comments: [];
+            // date: "2022-02-25T14:01:31.206Z";
+            // likes: [];
+            // name: "Test lavrov";
+            // profilePic: "";
+            // recipient: "621528c880508134ab2c5072";
+            // recipientName: "Yurii cher";
+            // text: "to me from test";
+            // user: {
+            //     _id: "6218dff796dafdb5b408c24a";
+            // }
+            // __v: 0;
+            // _id: "6218e13bb0c8e98b67febaca";
+            setPosts(response.data);
+        }
+        getPosts();
+
+        return () => {};
+    }, []);
 
     return (
         <DashboardContainer>
@@ -94,28 +110,25 @@ const Dashboard = () => {
             >
                 {showPostForm ? "Close" : "Post something"}
             </TogglePostButton>
-            {showPostForm ? (
-                <OverflowHidden>
-                    <PostForm>
-                        <PostTextArea
-                            onChange={(e) => {
-                                setPostValue(e.target.value);
-                            }}
-                            value={PostValue}
-                            rows={3}
-                            placeholder="What's on your mind?"
-                        />
-                        <PostSubmit>Post</PostSubmit>
-                    </PostForm>
-                </OverflowHidden>
-            ) : (
-                <></>
-            )}
-            {posts.map((post)=>{
-                return (<div>
-                    {post.text}
-                </div>)    
-            })}
+
+            <OverflowHidden>
+                <PostForm show={showPostForm}>
+                    <PostTextArea
+                        onChange={(e) => {
+                            setPostValue(e.target.value);
+                        }}
+                        value={PostValue}
+                        rows={3}
+                        placeholder="What's on your mind?"
+                    />
+                    <PostSubmit>Post</PostSubmit>
+                </PostForm>
+            </OverflowHidden>
+            <PostsContainer show={showPostForm}>
+                {posts.map((post) => {
+                    return <Post key={post._id} post={post}/>;
+                })}
+            </PostsContainer>
         </DashboardContainer>
     );
 };

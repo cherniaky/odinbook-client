@@ -29,12 +29,16 @@ const LoaderDiv = styled.div`
 `;
 
 function App() {
-    const [theme, setTheme] = useState("light");
+    const [theme, setTheme] = useState(
+        localStorage.getItem("theme") || "light"
+    );
 
-     function toggleTheme() {
-        if (theme=="light") {
-           return setTheme("dark")
+    function toggleTheme() {
+        if (theme == "light") {
+            localStorage.setItem("theme", "dark");
+            return setTheme("dark");
         }
+        localStorage.setItem("theme", "light");
         return setTheme("light");
     }
 
@@ -53,7 +57,7 @@ function App() {
         <>
             <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
                 <GlobalStyle />
-                <NavBar toggleTheme={toggleTheme}/>
+                <NavBar toggleTheme={toggleTheme} />
                 <AppDiv>
                     <Routes>
                         <Route
@@ -88,7 +92,7 @@ function App() {
                             <Route
                                 exact
                                 path={ROUTES.DASHBOARD}
-                                element={<Dashboard/>}
+                                element={<Dashboard />}
                             ></Route>
                         </Route>
                     </Routes>
