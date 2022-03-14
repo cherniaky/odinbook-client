@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import * as ROUTES from "../helpers/ROUTES";
 import { Link, Routes, useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
@@ -69,6 +69,32 @@ const ActionButton = styled.button`
         }
     }
 `;
+const PostCommentContainer = styled.div`
+    display: flex;
+    padding-top: 10px;
+    justify-content: stretch;
+`;
+const Input = styled.input`
+    flex-grow: 4;
+    background-color: ${(props) => props.theme.bodyBg};
+    border: 1px solid ${(props) => props.theme.borderColour};
+    padding: 6px;
+    // margin: 10px 0 0;
+    width: 90%;
+    border-radius: 5px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+`;
+const PostCommentButton = styled.button`
+    cursor: pointer;
+    background-color: ${({ theme }) => theme.buttonColour};
+    color: white;
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 5px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+`;
 const Post = ({ post }) => {
     let {
         date,
@@ -85,7 +111,7 @@ const Post = ({ post }) => {
     const [postComments, setPostComments] = useState(comments);
     //  console.log(postLikes);
     const { authState, dispatch } = useContext(AuthContext);
-
+    const inputref = useRef(null);
     return (
         <Card>
             <PostUserContainer>
@@ -133,17 +159,13 @@ const Post = ({ post }) => {
                                 ({ user }) => user == authState.user._id
                             )
                         ) {
-                            // postLikes.splice(
-                            //     postLikes.indexOf(authState.user._id),
-                            //     1
-                            // );
                             setPostLikes(
                                 postLikes.filter(
                                     ({ user }) => user != authState.user._id
                                 )
                             );
                             await PostsService.likePost(_id);
-                            console.log(postLikes);
+                            // console.log(postLikes);
                             return;
                         }
                         setPostLikes([
@@ -151,8 +173,8 @@ const Post = ({ post }) => {
                             { user: authState.user._id },
                         ]);
                         await PostsService.likePost(_id);
-                        // postLikes.push(authState.user._id);
-                        console.log(postLikes);
+
+                        //console.log(postLikes);
                         return;
                     }}
                 >
@@ -161,11 +183,19 @@ const Post = ({ post }) => {
                         ? "You liked this post"
                         : "Like"}
                 </ActionButton>
-                <ActionButton>
+                <ActionButton
+                    onClick={() => {
+                        inputref.current.focus();
+                    }}
+                >
                     {" "}
                     <i className="fas fa-comments"></i> Comment
                 </ActionButton>
             </ActionContainer>
+            <PostCommentContainer>
+                <Input ref={inputref} placeholder="Post a comment" />
+                <PostCommentButton>Post</PostCommentButton>
+            </PostCommentContainer>
         </Card>
     );
 };
