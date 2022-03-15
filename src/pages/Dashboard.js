@@ -27,12 +27,13 @@ const fadeIn = keyframes`
   }
 `;
 const PostForm = styled.div`
-    border: 1px solid ${({ theme }) => theme.mainFontColour};
+    //border: 1px solid ${({ theme }) => theme.mainFontColour};
+    background-color: ${(props) => props.theme.cardBg};
     border-top: none;
     color: ${({ theme }) => theme.mainFontColour};
     width: 100%;
     padding: 10px;
-    box-shadow: ${(props) => props.theme.shadowColour} 0px 1px 1px;
+    // box-shadow: ${(props) => props.theme.shadowColour} 0px 2px 2px;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -53,6 +54,9 @@ const PostTextArea = styled.textarea`
 const OverflowHidden = styled.div`
     overflow: hidden;
     margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: ${(props) =>
+        props.show ? props.theme.shadowColour + " 0px 2px 2px" : ""};
 `;
 
 const PostSubmit = styled.button`
@@ -115,7 +119,7 @@ const Dashboard = () => {
                 {showPostForm ? "Close" : "Post something"}
             </TogglePostButton>
 
-            <OverflowHidden>
+            <OverflowHidden show={showPostForm}>
                 <PostForm show={showPostForm}>
                     <PostTextArea
                         onChange={(e) => {

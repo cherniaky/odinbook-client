@@ -75,6 +75,7 @@ const PostCommentContainer = styled.div`
     justify-content: stretch;
 `;
 const Input = styled.input`
+    color: ${({ theme }) => theme.mainFontColour};
     flex-grow: 4;
     background-color: ${(props) => props.theme.bodyBg};
     border: 1px solid ${(props) => props.theme.borderColour};
@@ -231,7 +232,7 @@ const Post = ({ post }) => {
 
             {postComments.map((comment) => {
                 // console.log(comment);
-                
+
                 return (
                     <CommentContainer key={comment._id}>
                         {" "}
