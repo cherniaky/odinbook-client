@@ -18,4 +18,9 @@ export default class PostsService {
             }
         );
     }
+    static async likeComment(postid,commentid) {
+        return await $api.post(`posts/${postid}/comments/${commentid}/like`, {
+            withCredentials: true,
+        });
+    }
 }

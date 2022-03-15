@@ -95,6 +95,40 @@ const PostCommentButton = styled.button`
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 `;
+
+const CommentContainer = styled.div`
+    margin-top: 10px;
+    background-color: ${({ theme }) => theme.bodyBg};
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+
+    & b {
+        //font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+    }
+    & a {
+        font-weight: bold;
+    }
+    & p {
+        margin-top: 4px;
+    }
+`;
+
+const LikeComment = styled.div`
+    margin-top: 4px;
+    cursor: pointer;
+    & i {
+        color: ${(props) => (props.active ? props.theme.buttonColour : "")};
+    }
+    &:hover i {
+        color: ${({ theme }) => theme.buttonColour};
+    }
+`;
+
 const Post = ({ post }) => {
     let {
         date,
@@ -110,8 +144,10 @@ const Post = ({ post }) => {
     const [postLikes, setPostLikes] = useState(likes);
     const [postComments, setPostComments] = useState(comments);
     //  console.log(postLikes);
+    //  console.log(postCom);
     const { authState, dispatch } = useContext(AuthContext);
     const inputref = useRef(null);
+
     return (
         <Card>
             <PostUserContainer>
@@ -192,6 +228,104 @@ const Post = ({ post }) => {
                     <i className="fas fa-comments"></i> Comment
                 </ActionButton>
             </ActionContainer>
+
+            {postComments.map((comment) => {
+                // console.log(comment);
+                return (
+                    <CommentContainer key={comment._id}>
+                        {" "}
+                        <b>
+                            <Link to={`users/${comment.user}`}>
+                                {" "}
+                                {comment.name}
+                            </Link>
+                            {makeDateAgo(comment.date)} ago
+                        </b>{" "}
+                        <p> {comment.text}</p>
+                        <LikeComment
+                            active={comment.likes.some(
+                                (like) => like.user === authState.user._id
+                            )}
+                            onClick={async () => {
+                              //  let commentid = 0;
+                               async function likeComment() {
+                                   await PostsService.likeComment(
+                                       _id,
+                                       comment._id
+                                   );
+                               }
+                                setPostComments(
+                                    postComments.map( (postcomment) => {
+                                        if (postcomment._id === comment._id) {
+                                            // console.log(postcomment.likes);
+                                            if (
+                                                postcomment.likes.some(
+                                                    (like) =>
+                                                        like.user ===
+                                                        authState.user._id
+                                                )
+                                            ) {
+                                                // console.log("unlike");
+                                                // await PostsService.likeComment(
+                                                //     _id,
+                                                //     comment._id
+                                                // );
+                                                //  commentid = comment._id;
+                                                likeComment();
+                                                return {
+                                                    ...postcomment,
+                                                    likes: postcomment.likes.filter(
+                                                        (like) =>
+                                                            like.user !==
+                                                            authState.user._id
+                                                    ),
+                                                };
+                                            }
+                                            //console.log("like"); 
+                                            likeComment()
+                                            //commentid = comment._id;
+                                            // await PostsService.likeComment(
+                                            //     _id,
+                                            //     comment._id
+                                            // );
+
+                                            postcomment.likes.push({
+                                                user: authState.user._id,
+                                            });
+
+                                            return {
+                                                ...postcomment,
+                                                likes: postcomment.likes,
+                                            };
+                                        }
+
+                                        return postcomment;
+                                    })
+                                );
+                                // if (commentid != 0) {
+                                //     await PostsService.likeComment(
+                                //         _id,
+                                //         commentid
+                                //     );
+                                // }
+                                // else{
+                                //     console.log("no");
+                                // }
+                            }}
+                        >
+                            {" "}
+                            <i className="fas fa-thumbs-up"></i>{" "}
+                            {/* {comment.likes.some(
+                                ({ user }) => user == authState.user._id
+                            )
+                                ? "You liked this post"
+                                : } */}
+                            {comment.likes.length}
+                        </LikeComment>
+                    </CommentContainer>
+                );
+            })}
+
             <PostCommentContainer>
                 <Input ref={inputref} placeholder="Post a comment" />
                 <PostCommentButton>Post</PostCommentButton>
