@@ -231,6 +231,7 @@ const Post = ({ post }) => {
 
             {postComments.map((comment) => {
                 // console.log(comment);
+                
                 return (
                     <CommentContainer key={comment._id}>
                         {" "}
@@ -265,12 +266,7 @@ const Post = ({ post }) => {
                                                         authState.user._id
                                                 )
                                             ) {
-                                                // console.log("unlike");
-                                                // await PostsService.likeComment(
-                                                //     _id,
-                                                //     comment._id
-                                                // );
-                                                //  commentid = comment._id;
+                                                
                                                 likeComment();
                                                 return {
                                                     ...postcomment,
@@ -281,13 +277,9 @@ const Post = ({ post }) => {
                                                     ),
                                                 };
                                             }
-                                            //console.log("like"); 
+                                           
                                             likeComment()
-                                            //commentid = comment._id;
-                                            // await PostsService.likeComment(
-                                            //     _id,
-                                            //     comment._id
-                                            // );
+                                            
 
                                             postcomment.likes.push({
                                                 user: authState.user._id,
@@ -302,24 +294,12 @@ const Post = ({ post }) => {
                                         return postcomment;
                                     })
                                 );
-                                // if (commentid != 0) {
-                                //     await PostsService.likeComment(
-                                //         _id,
-                                //         commentid
-                                //     );
-                                // }
-                                // else{
-                                //     console.log("no");
-                                // }
+                               
                             }}
                         >
                             {" "}
                             <i className="fas fa-thumbs-up"></i>{" "}
-                            {/* {comment.likes.some(
-                                ({ user }) => user == authState.user._id
-                            )
-                                ? "You liked this post"
-                                : } */}
+                            
                             {comment.likes.length}
                         </LikeComment>
                     </CommentContainer>

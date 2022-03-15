@@ -97,9 +97,13 @@ const Dashboard = () => {
             setPosts(response.data);
         }
         getPosts();
-
+        // console.log(posts);
         return () => {};
     }, []);
+
+    async function PostSubmitF(text) {
+        return PostsService.makePost(text);
+    }
 
     return (
         <DashboardContainer>
@@ -121,12 +125,21 @@ const Dashboard = () => {
                         rows={3}
                         placeholder="What's on your mind?"
                     />
-                    <PostSubmit>Post</PostSubmit>
+                    <PostSubmit
+                        onClick={async () => {
+                            let res = await PostSubmitF(PostValue);
+                            console.log(res);
+                            setPostValue("");
+                            setPosts([{ ...res.data }, ...posts]);
+                        }}
+                    >
+                        Post
+                    </PostSubmit>
                 </PostForm>
             </OverflowHidden>
             <PostsContainer show={showPostForm}>
                 {posts.map((post) => {
-                    return <Post key={post._id} post={post}/>;
+                    return <Post key={post._id} post={post} />;
                 })}
             </PostsContainer>
         </DashboardContainer>
