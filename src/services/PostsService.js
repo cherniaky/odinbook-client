@@ -14,7 +14,18 @@ export default class PostsService {
         return $api.post(
             "posts",
             {
-                text:text,
+                text,
+            },
+            {
+                withCredentials: true,
+            }
+        );
+    }
+    static async makePostComment(postid, text) {
+        return $api.post(
+            `posts/${postid}/comments`,
+            {
+                text,
             },
             {
                 withCredentials: true,
@@ -22,14 +33,11 @@ export default class PostsService {
         );
     }
     static async likePost(postid) {
-        return await $api.post(
-            `posts/${postid}/like`,
-            {
-                withCredentials: true,
-            }
-        );
+        return await $api.post(`posts/${postid}/like`, {
+            withCredentials: true,
+        });
     }
-    static async likeComment(postid,commentid) {
+    static async likeComment(postid, commentid) {
         return await $api.post(`posts/${postid}/comments/${commentid}/like`, {
             withCredentials: true,
         });

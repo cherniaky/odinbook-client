@@ -22,11 +22,20 @@ const NavSection = styled.section`
     display: flex;
     justify-content: center;
     align-items: center;
+    @media screen and (max-width: 890px) {
+        display: none;
+        // width: 90%;
+    }
 `;
+const TitleSection = styled.section`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
 const Title = styled.h1`
     font-size: 32px;
     text-shadow: ${(props) => props.theme.mainTitleGlow};
-   
 `;
 
 const ToggleButton = styled.span`
@@ -35,7 +44,7 @@ const ToggleButton = styled.span`
     display: flex;
     align-items: flex-start;
     font-size: 20px;
-   
+
     text-shadow: ${(props) => props.theme.mainTitleGlow};
     &:hover {
         opacity: 0.7;
@@ -48,6 +57,11 @@ const Input = styled.input`
     border: 1px solid ${(props) => props.theme.borderColour};
     padding: 6px;
     width: 100%;
+
+    @media screen and (max-width: 890px) {
+        display: none;
+        // width: 90%;
+    }
 `;
 
 const Button = styled.button`
@@ -55,7 +69,11 @@ const Button = styled.button`
     padding: 0 10px;
     cursor: pointer;
     color: white;
-    background-color: ${({ theme }) => theme.buttonColour}; ;
+    background-color: ${({ theme }) => theme.buttonColour};
+    @media screen and (max-width: 890px) {
+        display: none;
+        // width: 90%;
+    }
 `;
 const NavLink = styled.div`
     cursor: pointer;
@@ -67,6 +85,31 @@ const NavLink = styled.div`
     &:hover {
         color: ${({ theme }) => theme.buttonColour};
     }
+    @media screen and (max-width: 890px) {
+        display: none;
+        // width: 90%;
+    }
+`;
+
+const BarsSection = styled.section`
+    display: none;
+
+    &:hover {
+        color: ${({ theme }) => theme.buttonColour};
+    }
+    @media screen and (max-width: 890px) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        margin: 0 10px;
+        font-size: 17px;
+        height: 100%;
+        font-size: 36px;
+        justify-content: center;
+        align-items: center;
+        // width: 90%;
+    }
 `;
 
 export const NavBar = ({ toggleTheme }) => {
@@ -74,7 +117,7 @@ export const NavBar = ({ toggleTheme }) => {
 
     return (
         <NavBarContainer>
-            <NavSection>
+            <TitleSection>
                 <Title>
                     <Link to={ROUTES.DASHBOARD}>Odinbook</Link>
                 </Title>
@@ -85,11 +128,11 @@ export const NavBar = ({ toggleTheme }) => {
                 >
                     <i className="fas fa-lightbulb"></i>
                 </ToggleButton>
-            </NavSection>
+            </TitleSection>
 
             {authState.isAuth ? (
                 <NavSection>
-                    <Input placeholder="Find your friends..." />
+                    <Input placeholder="Find new friends..." />
                     <Button
                         onClick={() => {
                             console.log("search");
@@ -134,6 +177,9 @@ export const NavBar = ({ toggleTheme }) => {
             ) : (
                 <></>
             )}
+            <BarsSection>
+                <i class="fa-solid fa-bars"></i>
+            </BarsSection>
         </NavBarContainer>
     );
 };

@@ -8,11 +8,16 @@ import Post from "../components/Post";
 
 const DashboardContainer = styled.div`
     width: 55%;
+    @media screen and (max-width: 750px) {
+        width: 90%;
+    }
+   
 `;
 
 const TogglePostButton = styled.button`
     cursor: pointer;
-    background-color: ${({ theme }) => theme.buttonColour};
+    background-color: ${(props) =>
+        props.show ? "#C61D3A" : props.theme.buttonColour};
     color: white;
     width: 100%;
     padding: 10px;
@@ -56,7 +61,7 @@ const OverflowHidden = styled.div`
     margin-bottom: 20px;
     border-radius: 10px;
     box-shadow: ${(props) =>
-        props.show ? props.theme.shadowColour + " 0px 2px 2px" : ""};
+        props.show ? `${props.theme.shadowColour} 0px 2px 2px` : ""};
 `;
 
 const PostSubmit = styled.button`
@@ -64,9 +69,12 @@ const PostSubmit = styled.button`
     background-color: ${({ theme }) => theme.buttonColour};
     color: white;
     margin-top: 10px;
-    width: 20%;
+    width: 30%;
     padding: 10px;
     border-radius: 10px;
+    @media screen and (max-width: 750px) {
+        width: 90%;
+    }
 `;
 const PostsContainer = styled.div`
     transform: ${(props) =>
@@ -112,6 +120,7 @@ const Dashboard = () => {
     return (
         <DashboardContainer>
             <TogglePostButton
+                show={showPostForm}
                 onClick={() => {
                     togglePostForm();
                 }}

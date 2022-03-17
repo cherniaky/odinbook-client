@@ -71,7 +71,7 @@ h4 {
 
 
 *:focus {
-  outline: none;
+  outline: 1px solid grey;
 }
 
 
