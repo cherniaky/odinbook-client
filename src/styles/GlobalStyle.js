@@ -10,7 +10,7 @@ const GlobalStyle = createGlobalStyle`
   box-sizing:border-box;
   font: inherit;
   vertical-align: baseline;
-   transition: 0.20s linear;
+   transition: 0.2s linear;
 }
 /* HTML5 display-role reset for older browsers */
 article,
@@ -73,7 +73,25 @@ h4 {
 *:focus {
   outline: 1px solid grey;
 }
+::-webkit-scrollbar {
+  width: 9px;
+  height: 5px;
+  z-index: 100;
+  /* display: none;  */
+}
 
+::-webkit-scrollbar-track {
+   transition: 0.2s linear;
+  background: ${({ theme }) => theme.bodyBg};
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+.stopScroll{
+   overflow: hidden;
+}
 
 `;
 

@@ -21,6 +21,11 @@ export default class PostsService {
             }
         );
     }
+    static async deletePost(id) {
+        return $api.delete(`posts/${id}`, {
+            withCredentials: true,
+        });
+    }
     static async makePostComment(postid, text) {
         return $api.post(
             `posts/${postid}/comments`,

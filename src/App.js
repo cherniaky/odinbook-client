@@ -58,6 +58,7 @@ function App() {
             <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
                 <GlobalStyle />
                 <NavBar toggleTheme={toggleTheme} />
+                
                 <AppDiv>
                     <Routes>
                         <Route

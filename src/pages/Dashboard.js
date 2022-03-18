@@ -11,7 +11,6 @@ const DashboardContainer = styled.div`
     @media screen and (max-width: 750px) {
         width: 90%;
     }
-   
 `;
 
 const TogglePostButton = styled.button`
@@ -116,6 +115,13 @@ const Dashboard = () => {
     async function PostSubmitF(text) {
         return PostsService.makePost(text);
     }
+    function handleDeletePost(id) {
+        setPosts(posts.filter((post) => post._id !== id));
+        async function del() {
+            await PostsService.deletePost(id);
+        }
+        del();
+    }
 
     return (
         <DashboardContainer>
@@ -152,7 +158,13 @@ const Dashboard = () => {
             </OverflowHidden>
             <PostsContainer show={showPostForm}>
                 {posts.map((post) => {
-                    return <Post key={post._id} post={post} />;
+                    return (
+                        <Post
+                            key={post._id}
+                            handleDeletePost={handleDeletePost}
+                            post={post}
+                        />
+                    );
                 })}
             </PostsContainer>
         </DashboardContainer>

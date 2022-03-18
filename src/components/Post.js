@@ -24,6 +24,17 @@ const PostUserContainer = styled.div`
         font-size: 40px;
     }
     margin-bottom: 10px;
+
+    & .fa-trash {
+        display: flex;
+        align-items: center;
+        font-size: 17px;
+        margin-left: auto;
+        cursor: pointer;
+    }
+    & .fa-trash:hover {
+        color: #c61d3a;
+    }
 `;
 const PostUserContainerSpaceBettwen = styled.div`
     display: flex;
@@ -117,11 +128,10 @@ const CommentContainer = styled.div`
     & p {
         margin-top: 4px;
     }
-   
 `;
 
 const CommentText = styled.div`
-    white-space: pre-wrap; 
+    white-space: pre-wrap;
     word-wrap: break-word;
     max-width: 100%;
     margin: 5px 0;
@@ -148,7 +158,7 @@ const ShowComments = styled.button`
     margin: 10px 0 0;
 `;
 
-const Post = ({ post }) => {
+const Post = ({ post, handleDeletePost }) => {
     let {
         date,
         likes,
@@ -197,6 +207,13 @@ const Post = ({ post }) => {
                     </div>
                     <p>{makeDateAgo(date)} ago</p>
                 </PostUserInfo>
+                {user._id == authState.user._id ? (
+                    <i onClick={()=>{
+                      handleDeletePost(_id);  
+                    }} className="fa-solid fa-trash"></i>
+                ) : (
+                    <></>
+                )}
             </PostUserContainer>
             <CommentText>{text}</CommentText>
             <PostUserContainerSpaceBettwen>
@@ -267,7 +284,6 @@ const Post = ({ post }) => {
                         <>
                             {postComments.length != 1 ? (
                                 <ShowComments
-                                    
                                     onClick={() => {
                                         setShowComments(true);
                                     }}

@@ -3,6 +3,7 @@ import * as ROUTES from "../helpers/ROUTES";
 import { Link, Routes, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "../contexts/authContext";
+import { MobileNav } from "./MobileNav";
 
 const NavBarContainer = styled.div`
     min-height: 60px;
@@ -114,72 +115,87 @@ const BarsSection = styled.section`
 
 export const NavBar = ({ toggleTheme }) => {
     const { authState, dispatch } = useContext(AuthContext);
+    const [showMobileMenu, setShowMobileMenu] = useState(false);
+
+    const toggleScroll = () => {
+        document.body.classList.toggle("stopScroll");
+    };
 
     return (
-        <NavBarContainer>
-            <TitleSection>
-                <Title>
-                    <Link to={ROUTES.DASHBOARD}>Odinbook</Link>
-                </Title>
-                <ToggleButton
+        <>
+            <NavBarContainer>
+                <TitleSection>
+                    <Title>
+                        <Link to={ROUTES.DASHBOARD}>Odinbook</Link>
+                    </Title>
+                    <ToggleButton
+                        onClick={() => {
+                            toggleTheme();
+                        }}
+                    >
+                        <i className="fas fa-lightbulb"></i>
+                    </ToggleButton>
+                </TitleSection>
+
+                {authState.isAuth ? (
+                    <NavSection>
+                        <Input placeholder="Find new friends..." />
+                        <Button
+                            onClick={() => {
+                                console.log("search");
+                            }}
+                        >
+                            Search
+                        </Button>
+                    </NavSection>
+                ) : (
+                    <></>
+                )}
+
+                {authState.isAuth ? (
+                    <NavSection>
+                        <NavLink>
+                            <i className="fas fa-envelope"></i>
+                        </NavLink>
+                        <NavLink>
+                            <i className="fas fa-bell"></i>
+                        </NavLink>
+                        <NavLink>
+                            <i className="fas fa-user-friends"></i>
+                        </NavLink>
+
+                        <Link to={`users/${authState.user._id}`}>
+                            <NavLink>
+                                {authState.user.firstName +
+                                    " " +
+                                    authState.user.familyName}
+                            </NavLink>
+                        </Link>
+                        <Button
+                            onClick={() => {
+                                dispatch({
+                                    type: "logout",
+                                });
+                            }}
+                        >
+                            Log out
+                        </Button>
+                    </NavSection>
+                ) : (
+                    <></>
+                )}
+                <BarsSection
                     onClick={() => {
-                        toggleTheme();
+                        window.scroll(0, 0);
+                        toggleScroll();
+                        setShowMobileMenu(!showMobileMenu);
+                        //console.log(showMobileMenu);
                     }}
                 >
-                    <i className="fas fa-lightbulb"></i>
-                </ToggleButton>
-            </TitleSection>
-
-            {authState.isAuth ? (
-                <NavSection>
-                    <Input placeholder="Find new friends..." />
-                    <Button
-                        onClick={() => {
-                            console.log("search");
-                        }}
-                    >
-                        Search
-                    </Button>
-                </NavSection>
-            ) : (
-                <></>
-            )}
-
-            {authState.isAuth ? (
-                <NavSection>
-                    <NavLink>
-                        <i className="fas fa-envelope"></i>
-                    </NavLink>
-                    <NavLink>
-                        <i className="fas fa-bell"></i>
-                    </NavLink>
-                    <NavLink>
-                        <i className="fas fa-user-friends"></i>
-                    </NavLink>
-
-                    <Link to={`users/${authState.user._id}`}>
-                        <NavLink>
-                            {authState.user.firstName +
-                                " " +
-                                authState.user.familyName}
-                        </NavLink>
-                    </Link>
-                    <Button
-                        onClick={() => {
-                            dispatch({
-                                type: "logout",
-                            });
-                        }}
-                    >
-                        Log out
-                    </Button>
-                </NavSection>
-            ) : (
-                <></>
-            )}
-            <BarsSection>
-                <i class="fa-solid fa-bars"></i>
-            </BarsSection>
-        </NavBarContainer>
+                    <i className="fa-solid fa-bars"></i>
+                </BarsSection>
+            </NavBarContainer>
+            <MobileNav show={showMobileMenu} setShow={setShowMobileMenu} />
+        </>
     );
 };
