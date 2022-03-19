@@ -16,7 +16,7 @@ const DashboardContainer = styled.div`
 const TogglePostButton = styled.button`
     cursor: pointer;
     background-color: ${(props) =>
-        props.show ? "#C61D3A" : props.theme.buttonColour};
+        props.show ? props.theme.red : props.theme.buttonColour};
     color: white;
     width: 100%;
     padding: 10px;
@@ -44,8 +44,7 @@ const PostForm = styled.div`
     justify-content: space-between;
     transform: ${(props) =>
         props.show ? "translateY(0px)" : "translateY(-150px)"};
-    height: ${(props) =>
-        props.show ? "auto" : "150px"};
+    height: ${(props) => (props.show ? "auto" : "150px")};
     align-items: center;
     animation-iteration-count: 1;
 `;
@@ -80,10 +79,11 @@ const PostSubmit = styled.button`
     }
 `;
 const PostsContainer = styled.div`
-background-color: transparent;
+    background-color: transparent;
     transform: ${(props) =>
         props.show ? "translateY(0)" : "translateY(-150px)"};
 `;
+
 const Dashboard = () => {
     const [showPostForm, setShowPostForm] = useState(false);
     const [PostValue, setPostValue] = useState("");

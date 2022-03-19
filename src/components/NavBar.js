@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import * as ROUTES from "../helpers/ROUTES";
-import { Link, Routes, useNavigate } from "react-router-dom";
+import { Link, Navigate, Routes, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "../contexts/authContext";
 import { MobileNav } from "./MobileNav";
@@ -75,8 +75,11 @@ const Button = styled.button`
     background-color: ${({ theme }) => theme.buttonColour};
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-    ${props => props.search?"":"border-top-left-radius: 5px; border-bottom-left-radius: 5px;"};
-   
+    ${(props) =>
+        props.search
+            ? ""
+            : "border-top-left-radius: 5px; border-bottom-left-radius: 5px;"};
+
     @media screen and (max-width: 890px) {
         display: none;
         // width: 90%;
@@ -120,13 +123,25 @@ const BarsSection = styled.section`
 `;
 
 export const NavBar = ({ toggleTheme }) => {
+    const navigate = useNavigate();
     const { authState, dispatch } = useContext(AuthContext);
     const [showMobileMenu, setShowMobileMenu] = useState(false);
+    const [searchValue, setSearchValue] = useState("");
 
     const toggleScroll = () => {
         document.body.classList.toggle("stopScroll");
     };
 
+    const toggleMobile = () => {
+        window.scroll(0, 0);
+        toggleScroll();
+        setShowMobileMenu(!showMobileMenu);
+    };
+    const handleSearch = (text) => {
+        navigate(`${ROUTES.SEARCH}?user=${text}`);
+        setSearchValue("");
+        // <Navigate to={`${ROUTES.SEARCH}?user=${text}`} />;
+    };
     return (
         <>
             <NavBarContainer>
@@ -145,11 +160,18 @@ export const NavBar = ({ toggleTheme }) => {
 
                 {authState.isAuth ? (
                     <NavSection>
-                        <Input placeholder="Find new friends..." />
+                        <Input
+                            value={searchValue}
+                            onChange={(e) => {
+                                setSearchValue(e.target.value);
+                            }}
+                            placeholder="Find new friends..."
+                        />
                         <Button
-                        search={true}
+                            search={true}
                             onClick={() => {
-                                console.log("search");
+                                //console.log("search");
+                                handleSearch(searchValue);
                             }}
                         >
                             Search
@@ -160,49 +182,60 @@ export const NavBar = ({ toggleTheme }) => {
                 )}
 
                 {authState.isAuth ? (
-                    <NavSection>
-                        <NavLink>
-                            <i className="fas fa-envelope"></i>
-                        </NavLink>
-                        <NavLink>
-                            <i className="fas fa-bell"></i>
-                        </NavLink>
-                        <NavLink>
-                            <i className="fas fa-user-friends"></i>
-                        </NavLink>
-
-                        <Link to={`users/${authState.user._id}`}>
+                    <>
+                        <NavSection>
                             <NavLink>
-                                {authState.user.firstName +
-                                    " " +
-                                    authState.user.familyName}
+                                <i className="fas fa-envelope"></i>
                             </NavLink>
-                        </Link>
-                        <Button
+                            <NavLink>
+                                <i className="fas fa-bell"></i>
+                            </NavLink>
+                            <NavLink>
+                                <i className="fas fa-user-friends"></i>
+                            </NavLink>
+
+                            <Link to={`users/${authState.user._id}`}>
+                                <NavLink>
+                                    {authState.user.firstName +
+                                        " " +
+                                        authState.user.familyName}
+                                </NavLink>
+                            </Link>
+                            <Button
+                                onClick={() => {
+                                    dispatch({
+                                        type: "logout",
+                                    });
+                                }}
+                            >
+                                Log out
+                            </Button>
+                        </NavSection>
+
+                        <BarsSection
                             onClick={() => {
-                                dispatch({
-                                    type: "logout",
-                                });
+                                toggleMobile();
+                                //console.log(showMobileMenu);
                             }}
                         >
-                            Log out
-                        </Button>
-                    </NavSection>
+                            <i className="fa-solid fa-bars"></i>
+                        </BarsSection>
+                    </>
                 ) : (
                     <></>
                 )}
-                <BarsSection
-                    onClick={() => {
-                        window.scroll(0, 0);
-                        toggleScroll();
-                        setShowMobileMenu(!showMobileMenu);
-                        //console.log(showMobileMenu);
-                    }}
-                >
-                    <i className="fa-solid fa-bars"></i>
-                </BarsSection>
             </NavBarContainer>
-            <MobileNav show={showMobileMenu} setShow={setShowMobileMenu} />
+            {authState.isAuth ? (
+                <MobileNav
+                    show={showMobileMenu}
+                    toggleMobile={toggleMobile}
+                    searchValue={searchValue}
+                    setSearchValue={setSearchValue}
+                    handleSearch={handleSearch}
+                />
+            ) : (
+                <></>
+            )}{" "}
         </>
     );
 };

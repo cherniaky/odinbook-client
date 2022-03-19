@@ -33,7 +33,7 @@ const PostUserContainer = styled.div`
         cursor: pointer;
     }
     & .fa-trash:hover {
-        color: #c61d3a;
+        color: ${({ theme }) => theme.red};
     }
 `;
 const PostUserContainerSpaceBettwen = styled.div`

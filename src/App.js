@@ -12,6 +12,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import SignUp from "./pages/SignUp";
 import { NavBar } from "./components/NavBar";
 import Dashboard from "./pages/Dashboard";
+import Search from "./pages/Search";
 
 const AppDiv = styled.div`
     display: flex;
@@ -94,6 +95,11 @@ function App() {
                                 exact
                                 path={ROUTES.DASHBOARD}
                                 element={<Dashboard />}
+                            ></Route>
+                            <Route
+                                exact
+                                path={ROUTES.SEARCH}
+                                element={<Search />}
                             ></Route>
                         </Route>
                     </Routes>

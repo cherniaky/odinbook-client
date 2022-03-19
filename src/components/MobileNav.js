@@ -41,25 +41,21 @@ const Input = styled.input`
     color: ${({ theme }) => theme.mainFontColour};
     background-color: ${(props) => props.theme.bodyBg};
     border: 1px solid ${(props) => props.theme.borderColour};
+    border-right: none;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
     padding: 6px;
     width: 100%;
-
-    @media screen and (max-width: 890px) {
-        display: none;
-        // width: 90%;
-    }
 `;
 
 const Button = styled.button`
-    height: 34.8px;
+    height: 41.2px;
     padding: 0 10px;
     cursor: pointer;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
     color: white;
     background-color: ${({ theme }) => theme.buttonColour};
-    @media screen and (max-width: 890px) {
-        display: none;
-        // width: 90%;
-    }
 `;
 const NavLink = styled.div`
     cursor: pointer;
@@ -119,9 +115,12 @@ const NavItem = styled.section`
     padding: 10px;
     font-size: 24px;
     border-radius: 5px;
+    display: flex;
     cursor: pointer;
+    // color: ${(props) => (props.logOut ? props.theme.red : "")};
     &:hover {
-        background-color: ${({ theme }) => theme.buttonColour};
+        background-color: ${(props) =>
+            props.logOut ? props.theme.red : props.theme.buttonColour};
     }
     & i {
         margin-right: 10px;
@@ -134,15 +133,39 @@ const ProfileImg = styled.img`
     height: 40px;
 `;
 
-export const MobileNav = ({ show, setShow }) => {
+export const MobileNav = ({
+    show,
+    toggleMobile,
+    searchValue,
+    setSearchValue,
+    handleSearch,
+}) => {
     const { authState, dispatch } = useContext(AuthContext);
 
     function handleNavItem() {
-        setShow(false);
+        toggleMobile();
     }
     //console.log(authState);
     return (
         <MobileContainer show={show}>
+            <NavItem>
+                <Input
+                    value={searchValue}
+                    onChange={(e) => {
+                        setSearchValue(e.target.value);
+                    }}
+                    placeholder="Find new friends..."
+                />
+                <Button
+                    search={true}
+                    onClick={() => {
+                        handleNavItem();
+                       handleSearch(searchValue);
+                    }}
+                >
+                    Search
+                </Button>
+            </NavItem>
             <Link to={`users/${authState.user._id}`}>
                 <NavItem
                     onClick={() => {
@@ -158,15 +181,27 @@ export const MobileNav = ({ show, setShow }) => {
                 </NavItem>
             </Link>
             <NavItem>
+                {" "}
+                <i className="fas fa-envelope"></i>Messages
+            </NavItem>
+            <NavItem>
                 <i className="fas fa-user-friends"></i>Friend requests
             </NavItem>
             <NavItem>
                 {" "}
                 <i className="fas fa-bell"></i>Notifications
             </NavItem>
-            <NavItem>
+            <NavItem
+                onClick={() => {
+                    handleNavItem();
+                    dispatch({
+                        type: "logout",
+                    });
+                }}
+                logOut={true}
+            >
                 {" "}
-                <i className="fas fa-envelope"></i>Messages
+                <i className="fa-solid fa-right-from-bracket"></i>Log out
             </NavItem>
         </MobileContainer>
     );

@@ -10,6 +10,7 @@ export const darkTheme = {
     buttonColour: "#376A89",
     mainTitleColour: "#9ef2ff",
     linkColour: "#2D9EE9",
+    red:"#C61D3A",
     mainTitleGlow:
         "0px 0px 8px #56e7ff, 0px 0px 16px #7be1f9, 0px 0px 24px #90eaff, 0px 0px 32px #a9e6f0",
     subtitleDisplay: "static",
@@ -18,6 +19,7 @@ export const darkTheme = {
 export const lightTheme = {
     bodyBg: "#f5f5f5",
     cardBg: "#fff",
+    red: "#C61D3A",
     secondaryBg: "#f3f3f3",
     mainFontColour: "#434343",
     secondaryFontColour: "rgb(98, 98, 98)",
