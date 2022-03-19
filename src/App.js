@@ -13,6 +13,7 @@ import SignUp from "./pages/SignUp";
 import { NavBar } from "./components/NavBar";
 import Dashboard from "./pages/Dashboard";
 import Search from "./pages/Search";
+import Profile from "./pages/Profile";
 
 const AppDiv = styled.div`
     display: flex;
@@ -100,6 +101,11 @@ function App() {
                                 exact
                                 path={ROUTES.SEARCH}
                                 element={<Search />}
+                            ></Route>
+                            <Route
+                                exact
+                                path={ROUTES.PROFILE}
+                                element={<Profile />}
                             ></Route>
                         </Route>
                     </Routes>

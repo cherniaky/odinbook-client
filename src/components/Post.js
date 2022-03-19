@@ -220,8 +220,14 @@ const Post = ({ post, handleDeletePost }) => {
             </PostUserContainer>
             <CommentText>{text}</CommentText>
             <PostUserContainerSpaceBettwen>
-                <div>{postLikes.length} likes</div>
-                <div>{postComments.length} comments</div>
+                <div>
+                    {postLikes.length}{" "}
+                    {postLikes.length == 1 ? "like" : "likes"}
+                </div>
+                <div>
+                    {postComments.length}{" "}
+                    {postComments.length == 1 ? "comment" : "comments"}
+                </div>
             </PostUserContainerSpaceBettwen>
             <ActionContainer>
                 <ActionButton

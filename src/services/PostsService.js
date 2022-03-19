@@ -10,9 +10,29 @@ export default class PostsService {
             }
         );
     }
+    static async getPostsReciever(userid) {
+        return $api.get(
+            `posts/users/${userid}/wall`,
+
+            {
+                withCredentials: true,
+            }
+        );
+    }
     static async makePost(text) {
         return $api.post(
             "posts",
+            {
+                text,
+            },
+            {
+                withCredentials: true,
+            }
+        );
+    }
+    static async makePostOnWall(text, recipientId) {
+        return $api.post(
+            `posts/users/${recipientId}`,
             {
                 text,
             },
