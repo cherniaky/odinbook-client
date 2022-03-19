@@ -208,9 +208,12 @@ const Post = ({ post, handleDeletePost }) => {
                     <p>{makeDateAgo(date)} ago</p>
                 </PostUserInfo>
                 {user._id == authState.user._id ? (
-                    <i onClick={()=>{
-                      handleDeletePost(_id);  
-                    }} className="fa-solid fa-trash"></i>
+                    <i
+                        onClick={() => {
+                            handleDeletePost(_id);
+                        }}
+                        className="fa-solid fa-trash"
+                    ></i>
                 ) : (
                     <></>
                 )}

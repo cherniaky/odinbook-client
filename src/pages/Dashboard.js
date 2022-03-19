@@ -20,7 +20,7 @@ const TogglePostButton = styled.button`
     color: white;
     width: 100%;
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 5px;
 `;
 const fadeIn = keyframes`
   0% {
@@ -44,6 +44,8 @@ const PostForm = styled.div`
     justify-content: space-between;
     transform: ${(props) =>
         props.show ? "translateY(0px)" : "translateY(-150px)"};
+    height: ${(props) =>
+        props.show ? "auto" : "150px"};
     align-items: center;
     animation-iteration-count: 1;
 `;
@@ -51,12 +53,14 @@ const PostForm = styled.div`
 const PostTextArea = styled.textarea`
     background-color: transparent;
     width: 100%;
+    padding: 10px;
     resize: none;
     color: ${({ theme }) => theme.mainFontColour};
     border-bottom: 1px solid ${({ theme }) => theme.mainFontColour};
 `;
 const OverflowHidden = styled.div`
     overflow: hidden;
+    background-color: transparent;
     margin-bottom: 20px;
     border-radius: 10px;
     box-shadow: ${(props) =>
@@ -70,14 +74,15 @@ const PostSubmit = styled.button`
     margin-top: 10px;
     width: 30%;
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 5px;
     @media screen and (max-width: 750px) {
         width: 90%;
     }
 `;
 const PostsContainer = styled.div`
+background-color: transparent;
     transform: ${(props) =>
-        props.show ? "translateY(0)" : "translateY(-130px)"};
+        props.show ? "translateY(0)" : "translateY(-150px)"};
 `;
 const Dashboard = () => {
     const [showPostForm, setShowPostForm] = useState(false);
@@ -90,21 +95,6 @@ const Dashboard = () => {
     useEffect(() => {
         async function getPosts() {
             let response = await PostsService.getPosts();
-
-            // console.log(response.data);
-            // comments: [];
-            // date: "2022-02-25T14:01:31.206Z";
-            // likes: [];
-            // name: "Test lavrov";
-            // profilePic: "";
-            // recipient: "621528c880508134ab2c5072";
-            // recipientName: "Yurii cher";
-            // text: "to me from test";
-            // user: {
-            //     _id: "6218dff796dafdb5b408c24a";
-            // }
-            // __v: 0;
-            // _id: "6218e13bb0c8e98b67febaca";
             setPosts(response.data);
         }
         getPosts();
@@ -112,9 +102,6 @@ const Dashboard = () => {
         return () => {};
     }, []);
 
-    async function PostSubmitF(text) {
-        return PostsService.makePost(text);
-    }
     function handleDeletePost(id) {
         setPosts(posts.filter((post) => post._id !== id));
         async function del() {
@@ -122,6 +109,11 @@ const Dashboard = () => {
         }
         del();
     }
+
+    useEffect(() => {
+        // console.log(posts);
+        return () => {};
+    }, [posts]);
 
     return (
         <DashboardContainer>
@@ -146,10 +138,17 @@ const Dashboard = () => {
                     />
                     <PostSubmit
                         onClick={async () => {
-                            let res = await PostSubmitF(PostValue);
-                            console.log(res);
+                            let res = await PostsService.makePost(PostValue);
+                            //console.log(res.data);
+                            // let data = await res.json();
+                            // console.log(data);
                             setPostValue("");
-                            setPosts([{ ...res.data }, ...posts]);
+                            let arr = [
+                                { ...res.data, user: { _id: res.data.user } },
+                                ...posts,
+                            ];
+                            //console.log(arr);
+                            setPosts(arr);
                         }}
                     >
                         Post

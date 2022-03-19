@@ -57,6 +57,8 @@ const Input = styled.input`
     background-color: ${(props) => props.theme.bodyBg};
     border: 1px solid ${(props) => props.theme.borderColour};
     padding: 6px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
     width: 100%;
 
     @media screen and (max-width: 890px) {
@@ -71,6 +73,10 @@ const Button = styled.button`
     cursor: pointer;
     color: white;
     background-color: ${({ theme }) => theme.buttonColour};
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    ${props => props.search?"":"border-top-left-radius: 5px; border-bottom-left-radius: 5px;"};
+   
     @media screen and (max-width: 890px) {
         display: none;
         // width: 90%;
@@ -141,6 +147,7 @@ export const NavBar = ({ toggleTheme }) => {
                     <NavSection>
                         <Input placeholder="Find new friends..." />
                         <Button
+                        search={true}
                             onClick={() => {
                                 console.log("search");
                             }}
