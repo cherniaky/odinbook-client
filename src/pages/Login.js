@@ -7,6 +7,7 @@ import * as ROUTES from "../helpers/ROUTES";
 
 const LoginForm = styled.form`
     background-color: ${(props) => props.theme.cardBg};
+    color: ${({ theme }) => theme.mainFontColour};
     display: flex;
     flex-direction: column;
     // justify-content: space-between;
@@ -25,7 +26,6 @@ const LoginForm = styled.form`
     @media screen and (max-width: 460px) {
         width: 90%;
     }
-
 `;
 
 const Input = styled.input`
@@ -33,6 +33,7 @@ const Input = styled.input`
     border: 1px solid ${(props) => props.theme.borderColour};
     padding: 6px;
     margin: 5px 0 10px 0;
+    color: ${({ theme }) => theme.mainFontColour};
     width: 100%;
 `;
 

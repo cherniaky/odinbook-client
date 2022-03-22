@@ -190,7 +190,7 @@ const Post = ({ post, handleDeletePost }) => {
                 <PostUserInfo>
                     <div>
                         <b>
-                            <Link to={`users/${user._id}`}>{name}</Link>
+                            <Link to={`/users/${user._id}`}>{name}</Link>
                         </b>{" "}
                         {recipient != user._id ? (
                             <>

@@ -9,5 +9,13 @@ export default class UsersService {
             }
         );
     }
+    static async getUser(id) {
+        return $api.get(
+            `users/${id}`,
+            {
+                withCredentials: true,
+            }
+        );
+    }
    
 }

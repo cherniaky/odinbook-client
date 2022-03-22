@@ -88,7 +88,9 @@ h4 {
 ::-webkit-scrollbar-thumb {
   background: #888;
 }
-
+b{
+  font-weight: bold;
+}
 .stopScroll{
    overflow: hidden;
 }

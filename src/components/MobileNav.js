@@ -99,7 +99,7 @@ const MobileContainer = styled.div`
     background-color: ${({ theme }) => theme.headerColour};
     position: absolute;
 
-    top: ${(props) => (props.show ? "60px" : "-100vh")};
+    top: ${(props) => (props.show ? "60px" : "-130vh")};
     left: 0;
     width: 100%;
     display: flex;

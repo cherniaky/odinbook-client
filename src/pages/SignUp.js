@@ -31,6 +31,7 @@ const Input = styled.input`
     border: 1px solid ${(props) => props.theme.borderColour};
     padding: 6px;
     margin: 5px 0 10px 0;
+    color: ${({ theme }) => theme.mainFontColour};
     width: 100%;
 `;
 

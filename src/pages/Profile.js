@@ -5,14 +5,16 @@ import styled, { keyframes } from "styled-components";
 import { AuthContext } from "../contexts/authContext";
 import PostsService from "../services/PostsService";
 import Post from "../components/Post";
+import SideBar from "../components/SideBar";
 
 const ProfileContainer = styled.div`
-    width: 100%;
+    width: 90%;
     display: flex;
     justify-content: center;
     @media screen and (max-width: 750px) {
         flex-direction: column;
         align-items: center;
+        width: 100%;
     }
 `;
 
@@ -21,6 +23,7 @@ const DashboardContainer = styled.div`
     @media screen and (max-width: 750px) {
         width: 90%;
     }
+    
 `;
 
 const TogglePostButton = styled.button`
@@ -96,6 +99,15 @@ const PostsContainer = styled.div`
 
 const SideBarContainer = styled.div`
     width: auto;
+
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    align-items: center;
+    @media screen and (max-width: 750px) {
+        width: 100%;
+    }
 `;
 
 const Profile = () => {
@@ -128,7 +140,9 @@ const Profile = () => {
 
     return (
         <ProfileContainer>
-            <SideBarContainer>sidebar</SideBarContainer>
+            <SideBarContainer>
+                <SideBar />
+            </SideBarContainer>
             <DashboardContainer>
                 <TogglePostButton
                     show={showPostForm}
