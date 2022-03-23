@@ -60,7 +60,7 @@ const Action = styled.div`
     width: max-content;
 `;
 
-const Card = styled.div`
+export const Card = styled.div`
     position: relative;
     background-color: ${(props) => props.theme.cardBg};
     display: flex;
@@ -111,12 +111,12 @@ const GridItem = styled.div`
         font-size: 70px;
         margin-bottom: 5px;
     }
-    & a{
+    & a {
         display: flex;
         flex-direction: column;
         align-items: center;
     }
-    & img{
+    & img {
         border-radius: 50%;
         margin-bottom: 5px;
         width: 70px;
@@ -134,7 +134,7 @@ const SideBar = () => {
     useEffect(() => {
         async function getUser() {
             let res = await UsersService.getUser(userID);
-            console.log(res.data);
+            // console.log(res.data);
             setUser(res.data);
             setFriends(res.data.friends);
         }
@@ -163,38 +163,47 @@ const SideBar = () => {
                 <></>
             ) : (
                 <ActionsContainer>
-                    <>
-                        {user.friends.some(
-                            (friend) =>
-                                friend.friendId._id == authState.user._id &&
-                                friend.status == "accepted"
-                        ) ? (
-                            <Action>
-                                <i className="fa-solid fa-check"></i> friends
-                            </Action>
-                        ) : (
-                            <Action
-                                onClick={() => {
-                                    handleAddFriend();
-                                }}
-                            >
-                                Add a friend
-                            </Action>
-                        )}
-                    </>
-                    <Action
-                        onClick={() => {
-                            handleSendMessage();
-                        }}
-                    >
-                        <i className="fas fa-envelope"></i>Message
-                    </Action>
+                    {user.friends &&
+                    user.friends.some(
+                        (friend) =>
+                            friend.friendId._id == authState.user._id &&
+                            friend.status == "accepted"
+                    ) ? (
+                        <Action>
+                            <i className="fa-solid fa-check"></i> friends
+                        </Action>
+                    ) : (
+                        <Action
+                            onClick={() => {
+                                handleAddFriend();
+                            }}
+                        >
+                            Add a friend
+                        </Action>
+                    )}
+
+                    {user.friends &&
+                    user.friends.some(
+                        (friend) =>
+                            friend.friendId._id == authState.user._id &&
+                            friend.status == "accepted"
+                    ) ? (
+                        <Action
+                            onClick={() => {
+                                handleSendMessage();
+                            }}
+                        >
+                            <i className="fas fa-envelope"></i>Message
+                        </Action>
+                    ) : (
+                        <></>
+                    )}
                 </ActionsContainer>
             )}
             <Card>
                 {userID == authState.user._id ? (
                     <EditProfile>
-                        <Link to="/editprofile">Edit profile</Link>
+                        <Link to="/edit-profile">Edit profile</Link>
                     </EditProfile>
                 ) : (
                     <></>
@@ -214,20 +223,23 @@ const SideBar = () => {
             <Card>
                 <FriendsHeader>Friends ({friends.length}) </FriendsHeader>
                 <Grid>
-                    {friends.map(({ friendId: friend }) => {
-                        return (
-                            <GridItem>
-                                <Link to={`/users/${friend._id}`}>
-                                    {friend.profilePic ? (
-                                        <img src={friend.profilePic} />
-                                    ) : (
-                                        <i className="fa-regular fa-circle-user"></i>
-                                    )}
-
-                                    {friend.firstName}
-                                </Link>
-                            </GridItem>
-                        );
+                    {friends.map(({ friendId: friend }, index) => {
+                        if (index < 9) {
+                            return (
+                                <GridItem key={friend._id}>
+                                    <Link to={`/users/${friend._id}`}>
+                                        {friend.profilePic ? (
+                                            <img src={friend.profilePic} />
+                                        ) : (
+                                            <i className="fa-regular fa-circle-user"></i>
+                                        )}
+                                        {friend.firstName} {friend.familyName}
+                                    </Link>
+                                </GridItem>
+                            );
+                        } else {
+                            return <></>;
+                        }
                     })}
                     {/* <div> fdsf</div>
                     <div> fdsf</div> */}

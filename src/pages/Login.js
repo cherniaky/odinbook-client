@@ -28,7 +28,7 @@ const LoginForm = styled.form`
     }
 `;
 
-const Input = styled.input`
+export const Input = styled.input`
     background-color: ${(props) => props.theme.bodyBg};
     border: 1px solid ${(props) => props.theme.borderColour};
     padding: 6px;
@@ -75,7 +75,7 @@ const LoginSampleButton = styled.button`
     }
 `;
 
-const InputGroup = styled.div`
+export const InputGroup = styled.div`
     margin: 10px 0;
 `;
 

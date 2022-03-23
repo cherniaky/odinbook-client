@@ -14,6 +14,7 @@ import { NavBar } from "./components/NavBar";
 import Dashboard from "./pages/Dashboard";
 import Search from "./pages/Search";
 import Profile from "./pages/Profile";
+import EditProfile from "./pages/EditProfile";
 
 const AppDiv = styled.div`
     display: flex;
@@ -94,7 +95,7 @@ function App() {
                         >
                             <Route
                                 exact
-                                path={ROUTES.DASHBOARD}
+                                index
                                 element={<Dashboard />}
                             ></Route>
                             <Route
@@ -106,6 +107,11 @@ function App() {
                                 exact
                                 path={ROUTES.PROFILE}
                                 element={<Profile />}
+                            ></Route>
+                            <Route
+                                exact
+                                path={ROUTES.EDIT_PROFILE}
+                                element={<EditProfile />}
                             ></Route>
                         </Route>
                     </Routes>
