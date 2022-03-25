@@ -5,6 +5,13 @@ import styled, { keyframes } from "styled-components";
 import { AuthContext } from "../contexts/authContext";
 import PostsService from "../services/PostsService";
 import UsersService from "../services/UsersService";
+import { AnimatePresence, motion } from "framer-motion";
+import { Input } from "../pages/Login";
+import { Button } from "../pages/EditProfile";
+import ConversationsService from "../services/ConversationsService";
+import { ChatContext } from "../contexts/chatContext";
+import RequestsService from "../services/RequestsService";
+import { NotificationsContext } from "../contexts/notifyContext";
 
 const Container = styled.div`
     width: 70%;
@@ -60,7 +67,7 @@ const Action = styled.div`
     width: max-content;
 `;
 
-export const Card = styled.div`
+const Card = styled.div`
     position: relative;
     background-color: ${(props) => props.theme.cardBg};
     display: flex;
@@ -130,19 +137,37 @@ const SideBar = () => {
     const [user, setUser] = useState({});
     const [friends, setFriends] = useState([]);
     const { authState, dispatch } = useContext(AuthContext);
+    const { refreshConversations } = useContext(ChatContext);
+    const { Open } = useContext(NotificationsContext);
+    const [messageText, setMessageText] = useState("");
+    const [activeSendMessage, setActiveSendMessage] = useState(false);
+    const [requestSendText, setRequestSendText] = useState("");
 
     useEffect(() => {
         async function getUser() {
             let res = await UsersService.getUser(userID);
-            // console.log(res.data);
+            //console.log(res.data.friends);
             setUser(res.data);
-            setFriends(res.data.friends);
+            setFriends(
+                res.data.friends.filter((friend) => friend.status == "accepted")
+            );
         }
         getUser();
+
         return () => {};
     }, [userID]);
-    function handleAddFriend() {}
-    function handleSendMessage() {}
+
+    function handleAddFriend() {
+        RequestsService.sendRequest(userID);
+        setRequestSendText("Request send");
+    }
+    function handleSendMessage() {
+        ConversationsService.sendMessage(userID, messageText);
+        setMessageText("");
+        setActiveSendMessage(false);
+        Open("Message send");
+        refreshConversations();
+    }
 
     if (user == {}) {
         return <>Loading</>;
@@ -173,13 +198,28 @@ const SideBar = () => {
                             <i className="fa-solid fa-check"></i> friends
                         </Action>
                     ) : (
-                        <Action
-                            onClick={() => {
-                                handleAddFriend();
-                            }}
-                        >
-                            Add a friend
-                        </Action>
+                        <>
+                            {user.friends &&
+                            user.friends.some(
+                                (friend) =>
+                                    friend.friendId._id == authState.user._id &&
+                                    (friend.status == "recieved" ||
+                                        friend.status == "pending")
+                            ) ? (
+                                <Action>
+                                    <i className="fa-solid fa-check"></i>{" "}
+                                    Request send
+                                </Action>
+                            ) : (
+                                <Action
+                                    onClick={() => {
+                                        handleAddFriend();
+                                    }}
+                                >
+                                    {requestSendText || "Add a friend"}
+                                </Action>
+                            )}
+                        </>
                     )}
 
                     {user.friends &&
@@ -190,7 +230,7 @@ const SideBar = () => {
                     ) ? (
                         <Action
                             onClick={() => {
-                                handleSendMessage();
+                                setActiveSendMessage(!activeSendMessage);
                             }}
                         >
                             <i className="fas fa-envelope"></i>Message
@@ -200,6 +240,43 @@ const SideBar = () => {
                     )}
                 </ActionsContainer>
             )}
+
+            <AnimatePresence>
+                {user.friends &&
+                    user.friends.some(
+                        (friend) =>
+                            friend.friendId._id == authState.user._id &&
+                            friend.status == "accepted"
+                    ) &&
+                    activeSendMessage && (
+                        <Card
+                            as={motion.div}
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 145, opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{
+                                duration: 0.2,
+                            }}
+                            // show={activeSendMessage}
+                        >
+                            <p>Write a message:</p>
+                            <Input
+                                value={messageText}
+                                onChange={(e) => {
+                                    setMessageText(e.target.value);
+                                }}
+                            />
+                            <Button
+                                onClick={() => {
+                                    handleSendMessage();
+                                }}
+                            >
+                                Send
+                            </Button>
+                        </Card>
+                    )}
+            </AnimatePresence>
+
             <Card>
                 {userID == authState.user._id ? (
                     <EditProfile>

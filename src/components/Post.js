@@ -6,7 +6,7 @@ import { AuthContext } from "../contexts/authContext";
 import PostsService from "../services/PostsService";
 import { formatDistance } from "date-fns";
 import makeDateAgo from "../helpers/makeDateAgo";
-import { id } from "date-fns/locale";
+import { NotificationsContext } from "../contexts/notifyContext";
 
 const Card = styled.div`
     background-color: ${(props) => props.theme.cardBg};
@@ -177,6 +177,7 @@ const Post = ({ post, handleDeletePost }) => {
     //  console.log(postLikes);
     //  console.log(postCom);
     const { authState, dispatch } = useContext(AuthContext);
+    const { Open } = useContext(NotificationsContext);
     const inputref = useRef(null);
 
     return (
@@ -477,6 +478,7 @@ const Post = ({ post, handleDeletePost }) => {
                             comment
                         );
                         setComment("");
+                        Open("Comment added");
                         //console.log(res.data);
                         setPostComments(res.data);
                     }}

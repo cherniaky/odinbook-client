@@ -5,13 +5,19 @@ import { BrowserRouter as Router } from "react-router-dom";
 import App from "./App";
 import "font-awesome/css/font-awesome.min.css";
 import { AuthProvider } from "./contexts/authContext";
+import { ChatProvider } from "./contexts/chatContext";
+import { NotificationsProvider } from "./contexts/notifyContext";
 //import Store from "./store/store";
 
 ReactDOM.render(
     <AuthProvider>
-        <Router basename="/odinbook-client">
-            <App />
-        </Router>
+        <ChatProvider>
+            <NotificationsProvider>
+                <Router basename="/odinbook-client">
+                    <App />
+                </Router>
+            </NotificationsProvider>
+        </ChatProvider>
     </AuthProvider>,
     document.getElementById("root")
 );

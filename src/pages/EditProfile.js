@@ -5,9 +5,20 @@ import styled, { keyframes } from "styled-components";
 import { AuthContext } from "../contexts/authContext";
 import PostsService from "../services/PostsService";
 import UsersService from "../services/UsersService";
-import { Card } from "../components/SideBar";
+
 import { Input, InputGroup } from "./Login";
 
+const Card = styled.div`
+    position: relative;
+    background-color: ${(props) => props.theme.cardBg};
+    display: flex;
+
+    margin: 20px 0px;
+    padding: 20px;
+    flex-direction: column;
+    box-shadow: ${(props) => props.theme.shadowColour} 0px 1px 2px;
+    border-radius: 5px;
+`;
 const EditCard = styled(Card)`
     width: 40%;
     @media screen and (max-width: 850px) {
@@ -15,7 +26,7 @@ const EditCard = styled(Card)`
     }
 `;
 
-const Button = styled.button`
+export const Button = styled.button`
     height: 34.8px;
     padding: 0 10px;
     cursor: pointer;

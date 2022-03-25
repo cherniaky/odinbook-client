@@ -6,6 +6,8 @@ import { AuthContext } from "../contexts/authContext";
 import PostsService from "../services/PostsService";
 import Post from "../components/Post";
 import SideBar from "../components/SideBar";
+import UsersService from "../services/UsersService";
+import { NotificationsContext } from "../contexts/notifyContext";
 
 const ProfileContainer = styled.div`
     width: 90%;
@@ -23,7 +25,6 @@ const DashboardContainer = styled.div`
     @media screen and (max-width: 750px) {
         width: 90%;
     }
-    
 `;
 
 const TogglePostButton = styled.button`
@@ -113,8 +114,12 @@ const SideBarContainer = styled.div`
 const Profile = () => {
     const { userID } = useParams();
     const [showPostForm, setShowPostForm] = useState(false);
+    const [user, setUser] = useState({});
+    const { authState, dispatch } = useContext(AuthContext);
+    const { Open } = useContext(NotificationsContext);
     const [PostValue, setPostValue] = useState("");
     const [posts, setPosts] = useState([]);
+    
     function togglePostForm() {
         return setShowPostForm(!showPostForm);
     }
@@ -125,6 +130,12 @@ const Profile = () => {
             setPosts(response.data);
         }
         getPosts();
+        async function getUser() {
+            let res = await UsersService.getUser(userID);
+            // console.log(res.data);
+            setUser(res.data);
+        }
+        getUser();
         // console.log(params);
         // console.log(posts);
         return () => {};
@@ -136,6 +147,7 @@ const Profile = () => {
             await PostsService.deletePost(id);
         }
         del();
+        Open("Post deleted")
     }
 
     return (
@@ -144,15 +156,26 @@ const Profile = () => {
                 <SideBar />
             </SideBarContainer>
             <DashboardContainer>
-                <TogglePostButton
-                    show={showPostForm}
-                    onClick={() => {
-                        togglePostForm();
-                    }}
-                >
-                    {showPostForm ? "Close" : "Post something"}
-                </TogglePostButton>
-
+                {(user.friends &&
+                    user.friends.some(
+                        (friend) =>
+                            friend.friendId._id == authState.user._id &&
+                            friend.status == "accepted"
+                    )) ||
+                userID == authState.user._id ? (
+                    <>
+                        <TogglePostButton
+                            show={showPostForm}
+                            onClick={() => {
+                                togglePostForm();
+                            }}
+                        >
+                            {showPostForm ? "Close" : "Post something"}
+                        </TogglePostButton>
+                    </>
+                ) : (
+                    <></>
+                )}
                 <OverflowHidden show={showPostForm}>
                     <PostForm show={showPostForm}>
                         <PostTextArea
@@ -171,6 +194,7 @@ const Profile = () => {
                                 );
                                 //console.log(res.data);
                                 // let data = await res.json();
+                                Open("Post succesufully added");
                                 // console.log(data);
                                 setPostValue("");
                                 let arr = [

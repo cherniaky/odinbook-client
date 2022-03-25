@@ -4,6 +4,7 @@ import { Link, Navigate, Routes, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "../contexts/authContext";
 import { MobileNav } from "./MobileNav";
+import SidePanel from "./SidePanel";
 
 const NavBarContainer = styled.div`
     min-height: 60px;
@@ -127,6 +128,13 @@ export const NavBar = ({ toggleTheme }) => {
     const { authState, dispatch } = useContext(AuthContext);
     const [showMobileMenu, setShowMobileMenu] = useState(false);
     const [searchValue, setSearchValue] = useState("");
+    const [activeSidePannel, setActiveSidePannel] = useState(false);
+    const [sidePannelContent, setSidePannelContent] = useState("");
+    const [requests, setRequests] = useState([])
+
+    function toggleSidePannel() {
+        setActiveSidePannel(() => !activeSidePannel);
+    }
 
     const toggleScroll = () => {
         document.body.classList.toggle("stopScroll");
@@ -181,16 +189,47 @@ export const NavBar = ({ toggleTheme }) => {
                     <></>
                 )}
 
-                {authState.isAuth ? (
+                {authState.isAuth && (
                     <>
                         <NavSection>
-                            <NavLink>
+                            <NavLink
+                                onClick={() => {
+                                    if (
+                                        sidePannelContent == "Chats" ||
+                                        !activeSidePannel
+                                    ) {
+                                        toggleSidePannel();
+                                    }
+                                    setSidePannelContent("Chats");
+                                }}
+                            >
                                 <i className="fas fa-envelope"></i>
                             </NavLink>
-                            <NavLink>
+                            <NavLink
+                                onClick={() => {
+                                    if (
+                                        sidePannelContent == "Notifications" ||
+                                        !activeSidePannel
+                                    ) {
+                                        toggleSidePannel();
+                                    }
+                                    setSidePannelContent("Notifications");
+                                }}
+                            >
                                 <i className="fas fa-bell"></i>
                             </NavLink>
-                            <NavLink>
+                            <NavLink
+                                onClick={() => {
+                                    if (
+                                        sidePannelContent ==
+                                            "Friend requests" ||
+                                        !activeSidePannel
+                                    ) {
+                                        toggleSidePannel();
+                                    }
+                                    setSidePannelContent("Friend requests");
+                                }}
+                            >
                                 <i className="fas fa-user-friends"></i>
                             </NavLink>
 
@@ -218,24 +257,32 @@ export const NavBar = ({ toggleTheme }) => {
                                 //console.log(showMobileMenu);
                             }}
                         >
-                            <i className="fa-solid fa-bars"></i>
+                            <i
+                                className={`fa-solid ${
+                                    showMobileMenu
+                                        ? "fa-xmark"
+                                        : "fa-bars"
+                                }`}
+                            ></i>
                         </BarsSection>
                     </>
-                ) : (
-                    <></>
                 )}
             </NavBarContainer>
-            {authState.isAuth ? (
-                <MobileNav
-                    show={showMobileMenu}
-                    toggleMobile={toggleMobile}
-                    searchValue={searchValue}
-                    setSearchValue={setSearchValue}
-                    handleSearch={handleSearch}
-                />
-            ) : (
-                <></>
-            )}{" "}
+            {authState.isAuth && (
+                <>
+                    <MobileNav
+                        show={showMobileMenu}
+                        toggleMobile={toggleMobile}
+                        searchValue={searchValue}
+                        setSearchValue={setSearchValue}
+                        handleSearch={handleSearch}
+                    />
+                    <SidePanel
+                        active={activeSidePannel}
+                        title={sidePannelContent}
+                    />
+                </>
+            )}
         </>
     );
 };

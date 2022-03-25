@@ -5,6 +5,7 @@ import styled, { keyframes } from "styled-components";
 import { AuthContext } from "../contexts/authContext";
 import PostsService from "../services/PostsService";
 import Post from "../components/Post";
+import { NotificationsContext } from "../contexts/notifyContext";
 
 const DashboardContainer = styled.div`
     width: 55%;
@@ -88,6 +89,8 @@ const Dashboard = () => {
     const [showPostForm, setShowPostForm] = useState(false);
     const [PostValue, setPostValue] = useState("");
     const [posts, setPosts] = useState([]);
+    const { Open } = useContext(NotificationsContext);
+
     function togglePostForm() {
         return setShowPostForm(!showPostForm);
     }
@@ -107,6 +110,7 @@ const Dashboard = () => {
         async function del() {
             await PostsService.deletePost(id);
         }
+        Open("Post deleted");
         del();
     }
 
@@ -142,6 +146,7 @@ const Dashboard = () => {
                             //console.log(res.data);
                             // let data = await res.json();
                             // console.log(data);
+                            Open("Post succesufully added")
                             setPostValue("");
                             let arr = [
                                 { ...res.data, user: { _id: res.data.user } },
