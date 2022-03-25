@@ -1,10 +1,14 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import * as ROUTES from "../helpers/ROUTES";
 import { Link, Navigate, Routes, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "../contexts/authContext";
 import { MobileNav } from "./MobileNav";
 import SidePanel from "./SidePanel";
+import RequestsService from "../services/RequestsService";
+import Badge from "@mui/material/Badge";
+import GroupIcon from "@mui/icons-material/Group";
+import { red } from "@mui/material/colors";
 
 const NavBarContainer = styled.div`
     min-height: 60px;
@@ -130,7 +134,17 @@ export const NavBar = ({ toggleTheme }) => {
     const [searchValue, setSearchValue] = useState("");
     const [activeSidePannel, setActiveSidePannel] = useState(false);
     const [sidePannelContent, setSidePannelContent] = useState("");
-    const [requests, setRequests] = useState([])
+    const [requests, setRequests] = useState([]);
+
+    async function getReq() {
+        let res = await RequestsService.getRequests();
+        // console.log(res.data);
+        setRequests(res.data);
+    }
+
+    useEffect(() => {
+        getReq();
+    }, []);
 
     function toggleSidePannel() {
         setActiveSidePannel(() => !activeSidePannel);
@@ -225,12 +239,19 @@ export const NavBar = ({ toggleTheme }) => {
                                             "Friend requests" ||
                                         !activeSidePannel
                                     ) {
+                                        getReq();
                                         toggleSidePannel();
                                     }
                                     setSidePannelContent("Friend requests");
                                 }}
                             >
-                                <i className="fas fa-user-friends"></i>
+                                <Badge
+                                    badgeContent={requests.length}
+                                    color="error"
+                                >
+                                    <GroupIcon color="green" />
+                                </Badge>
+                                {/* <i className="fas fa-user-friends"></i> */}
                             </NavLink>
 
                             <Link to={`users/${authState.user._id}`}>
@@ -259,9 +280,7 @@ export const NavBar = ({ toggleTheme }) => {
                         >
                             <i
                                 className={`fa-solid ${
-                                    showMobileMenu
-                                        ? "fa-xmark"
-                                        : "fa-bars"
+                                    showMobileMenu ? "fa-xmark" : "fa-bars"
                                 }`}
                             ></i>
                         </BarsSection>
@@ -278,8 +297,11 @@ export const NavBar = ({ toggleTheme }) => {
                         handleSearch={handleSearch}
                     />
                     <SidePanel
+                        authId={authState.user._id}
+                        requests={requests}
                         active={activeSidePannel}
                         title={sidePannelContent}
+                        setRequests={setRequests}
                     />
                 </>
             )}

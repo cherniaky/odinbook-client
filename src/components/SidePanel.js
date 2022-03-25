@@ -7,12 +7,14 @@ import PostsService from "../services/PostsService";
 import makeDateAgo from "../helpers/makeDateAgo";
 import { NotificationsContext } from "../contexts/notifyContext";
 import { AnimatePresence, motion } from "framer-motion";
+import RequestsService from "../services/RequestsService";
 
 const PanelContainer = styled.div`
     position: fixed;
     top: 50;
     right: 0;
-    min-width: 200px;
+    min-width: 300px;
+    height: 100vh;
     background-color: ${(props) => props.theme.cardBg};
     display: flex;
     align-items: center;
@@ -30,12 +32,68 @@ const PanelTitle = styled.h1`
     font-weight: bold;
     margin-bottom: 15px;
 `;
-
-const PanelContent = styled.div`
-  
+const RequestItem = styled.li`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 `;
 
-const SidePanel = ({ active, title }) => {
+const PanelContent = styled.div`
+    width: 100%;
+`;
+
+const Button = styled.button`
+    height: 34.8px;
+    padding: 0 10px;
+    cursor: pointer;
+    color: white;
+    background-color: ${({ theme }) => theme.buttonColour};
+    border-radius: 5px;
+`;
+const SidePanel = ({ active, title, requests, setRequests, authId }) => {
+    let navigate = useNavigate();
+    async function handleAcceptFriend(userId, reqId) {
+        await RequestsService.acceptRequest(userId);
+        setRequests(requests.filter((req) => req._id != reqId));
+    }
+
+    const getContent = () => {
+        switch (title) {
+            case "Friend requests":
+                return (
+                    <ul>
+                        {requests.length != 0 ? (
+                            requests.map((req) => {
+                                return (
+                                    <RequestItem key={req._id}>
+                                        {req.friendId.firstName}{" "}
+                                        {req.friendId.familyName}
+                                        <Button
+                                            onClick={() => {
+                                                handleAcceptFriend(
+                                                    req.friendId._id,
+                                                    req._id
+                                                );
+                                                navigate(`/users/${authId}`);
+                                            }}
+                                        >
+                                            Accept
+                                        </Button>
+                                    </RequestItem>
+                                );
+                            })
+                        ) : (
+                            <>You have no pending requests</>
+                        )}
+                    </ul>
+                );
+
+            default:
+                return "Nothing new";
+            //break;
+        }
+    };
+
     return (
         <AnimatePresence>
             {" "}
@@ -46,11 +104,11 @@ const SidePanel = ({ active, title }) => {
                     animate={{ top: 60, right: 0, opacity: 1 }}
                     exit={{ top: 60, right: -100, opacity: 0 }}
                     transition={{
-                        duration: 0.2,
+                        duration: 0.15,
                     }}
                 >
                     <PanelTitle> {title}</PanelTitle>{" "}
-                    <PanelContent>Content</PanelContent>
+                    <PanelContent>{getContent()}</PanelContent>
                 </PanelContainer>
             )}
         </AnimatePresence>

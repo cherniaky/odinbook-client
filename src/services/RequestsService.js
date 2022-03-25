@@ -14,4 +14,12 @@ export default class RequestsService {
             }
         );
     }
+    static async acceptRequest(userId) {
+        return $api.post(
+            `requests/${userId}/accept`,
+            {
+                withCredentials: true,
+            }
+        );
+    }
 }
