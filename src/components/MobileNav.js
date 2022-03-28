@@ -116,6 +116,7 @@ const NavItem = styled.section`
     font-size: 24px;
     border-radius: 5px;
     display: flex;
+    align-items: center;
     cursor: pointer;
     // color: ${(props) => (props.logOut ? props.theme.red : "")};
     &:hover {
@@ -123,6 +124,9 @@ const NavItem = styled.section`
             props.logOut ? props.theme.red : props.theme.buttonColour};
     }
     & i {
+        margin-right: 10px;
+    }
+    & img {
         margin-right: 10px;
     }
 `;

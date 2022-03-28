@@ -8,6 +8,7 @@ import makeDateAgo from "../helpers/makeDateAgo";
 import { NotificationsContext } from "../contexts/notifyContext";
 import { AnimatePresence, motion } from "framer-motion";
 import RequestsService from "../services/RequestsService";
+import { ChatContext } from "../contexts/chatContext";
 
 const PanelContainer = styled.div`
     position: fixed;
@@ -19,7 +20,8 @@ const PanelContainer = styled.div`
     display: flex;
     align-items: center;
     // margin: 20px 0px;
-    padding: 20px;
+    padding: 20px 10px;
+    text-align: center;
     flex-direction: column;
     box-shadow: ${(props) => props.theme.shadowColour} 0px 1px 2px;
     color: ${({ theme }) => theme.mainFontColour};
@@ -38,8 +40,30 @@ const RequestItem = styled.li`
     justify-content: space-between;
 `;
 
+const ChatItem = styled(RequestItem)`
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    justify-content: start;
+    border-bottom: 1px solid ${({ theme }) => theme.mainFontColour};
+
+    &:hover {
+        background-color: ${({ theme }) => theme.secondaryBg};
+    }
+    & i {
+        font-size: 40px;
+        margin-right: 10px;
+    }
+`;
+
 const PanelContent = styled.div`
     width: 100%;
+`;
+
+const FlexColumn = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 `;
 
 const Button = styled.button`
@@ -50,8 +74,17 @@ const Button = styled.button`
     background-color: ${({ theme }) => theme.buttonColour};
     border-radius: 5px;
 `;
-const SidePanel = ({ active, title, requests, setRequests, authId }) => {
+
+const ChatImg = styled.img`
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+`;
+
+const SidePanel = ({ active, title, requests, setRequests, authId, chats }) => {
     let navigate = useNavigate();
+    const { toggleChat } = useContext(ChatContext);
     async function handleAcceptFriend(userId, reqId) {
         await RequestsService.acceptRequest(userId);
         setRequests(requests.filter((req) => req._id != reqId));
@@ -66,8 +99,10 @@ const SidePanel = ({ active, title, requests, setRequests, authId }) => {
                             requests.map((req) => {
                                 return (
                                     <RequestItem key={req._id}>
-                                        {req.friendId.firstName}{" "}
-                                        {req.friendId.familyName}
+                                        <Link to={`/users/${req.friendId._id}`}>
+                                            {req.friendId.firstName}{" "}
+                                            {req.friendId.familyName}
+                                        </Link>
                                         <Button
                                             onClick={() => {
                                                 handleAcceptFriend(
@@ -87,7 +122,65 @@ const SidePanel = ({ active, title, requests, setRequests, authId }) => {
                         )}
                     </ul>
                 );
+            case "Chats":
+                return (
+                    <ul>
+                        {chats.length != 0 ? (
+                            chats.map((chat) => {
+                                return (
+                                    <ChatItem
+                                        key={chat._id}
+                                        onClick={() => {
+                                            toggleChat(chat._id);
+                                        }}
+                                    >
+                                        {chat.participants[0]._id == authId
+                                            ? (
+                                                  <ChatImg
+                                                      src={
+                                                          chat.participants[1]
+                                                              .profilePic
+                                                      }
+                                                  />
+                                              ) || (
+                                                  <i className="fa-regular fa-circle-user"></i>
+                                              )
+                                            : (
+                                                  <ChatImg
+                                                      src={
+                                                          chat.participants[0]
+                                                              .profilePic
+                                                      }
+                                                  />
+                                              ) || (
+                                                  <i className="fa-regular fa-circle-user"></i>
+                                              )}
 
+                                        <FlexColumn>
+                                            {" "}
+                                            {chat.participants[0]._id == authId
+                                                ? `${chat.participants[1].firstName} ${chat.participants[1].familyName}`
+                                                : `${chat.participants[0].firstName} ${chat.participants[0].familyName}`}
+                                            <p>
+                                                {
+                                                    chat.lastMessage.sender
+                                                        .firstName
+                                                }{" "}
+                                                {
+                                                    chat.lastMessage.sender
+                                                        .familyName
+                                                }
+                                                : {chat.lastMessage.text}
+                                            </p>
+                                        </FlexColumn>
+                                    </ChatItem>
+                                );
+                            })
+                        ) : (
+                            <>No chats</>
+                        )}
+                    </ul>
+                );
             default:
                 return "Nothing new";
             //break;

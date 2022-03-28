@@ -11,13 +11,11 @@ import { NotificationsProvider } from "./contexts/notifyContext";
 
 ReactDOM.render(
     <AuthProvider>
-        <ChatProvider>
-            <NotificationsProvider>
-                <Router basename="/odinbook-client">
-                    <App />
-                </Router>
-            </NotificationsProvider>
-        </ChatProvider>
+        <NotificationsProvider>
+            <Router basename="/odinbook-client">
+                <App />
+            </Router>
+        </NotificationsProvider>
     </AuthProvider>,
     document.getElementById("root")
 );

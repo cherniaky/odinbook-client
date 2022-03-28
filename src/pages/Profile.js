@@ -111,6 +111,11 @@ const SideBarContainer = styled.div`
     }
 `;
 
+const NoPostForm = styled.div`
+    text-align: center;
+    font-size: 30px;
+`;
+
 const Profile = () => {
     const { userID } = useParams();
     const [showPostForm, setShowPostForm] = useState(false);
@@ -119,7 +124,7 @@ const Profile = () => {
     const { Open } = useContext(NotificationsContext);
     const [PostValue, setPostValue] = useState("");
     const [posts, setPosts] = useState([]);
-    
+
     function togglePostForm() {
         return setShowPostForm(!showPostForm);
     }
@@ -147,7 +152,7 @@ const Profile = () => {
             await PostsService.deletePost(id);
         }
         del();
-        Open("Post deleted")
+        Open("Post deleted");
     }
 
     return (
@@ -213,15 +218,19 @@ const Profile = () => {
                     </PostForm>
                 </OverflowHidden>
                 <PostsContainer show={showPostForm}>
-                    {posts.map((post) => {
-                        return (
-                            <Post
-                                key={post._id}
-                                handleDeletePost={handleDeletePost}
-                                post={post}
-                            />
-                        );
-                    })}
+                    {posts.length != 0 ? (
+                        posts.map((post) => {
+                            return (
+                                <Post
+                                    key={post._id}
+                                    handleDeletePost={handleDeletePost}
+                                    post={post}
+                                />
+                            );
+                        })
+                    ) : (
+                        <NoPostForm>No posts</NoPostForm>
+                    )}
                 </PostsContainer>
             </DashboardContainer>
         </ProfileContainer>

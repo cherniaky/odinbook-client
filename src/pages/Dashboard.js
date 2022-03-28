@@ -85,6 +85,11 @@ const PostsContainer = styled.div`
         props.show ? "translateY(0)" : "translateY(-150px)"};
 `;
 
+const NoPostForm = styled.div`
+    text-align: center;
+    font-size: 30px;
+`;
+
 const Dashboard = () => {
     const [showPostForm, setShowPostForm] = useState(false);
     const [PostValue, setPostValue] = useState("");
@@ -146,7 +151,7 @@ const Dashboard = () => {
                             //console.log(res.data);
                             // let data = await res.json();
                             // console.log(data);
-                            Open("Post succesufully added")
+                            Open("Post succesufully added");
                             setPostValue("");
                             let arr = [
                                 { ...res.data, user: { _id: res.data.user } },
@@ -161,15 +166,19 @@ const Dashboard = () => {
                 </PostForm>
             </OverflowHidden>
             <PostsContainer show={showPostForm}>
-                {posts.map((post) => {
-                    return (
-                        <Post
-                            key={post._id}
-                            handleDeletePost={handleDeletePost}
-                            post={post}
-                        />
-                    );
-                })}
+                {posts.length != 0 ? (
+                    posts.map((post) => {
+                        return (
+                            <Post
+                                key={post._id}
+                                handleDeletePost={handleDeletePost}
+                                post={post}
+                            />
+                        );
+                    })
+                ) : (
+                    <NoPostForm>No posts</NoPostForm>
+                )}
             </PostsContainer>
         </DashboardContainer>
     );

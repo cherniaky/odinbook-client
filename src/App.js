@@ -15,6 +15,7 @@ import Dashboard from "./pages/Dashboard";
 import Search from "./pages/Search";
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
+import { ChatProvider } from "./contexts/chatContext";
 
 const AppDiv = styled.div`
     display: flex;
@@ -59,63 +60,65 @@ function App() {
     return (
         <>
             <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
-                <GlobalStyle />
-                <NavBar toggleTheme={toggleTheme} />
-                
-                <AppDiv>
-                    <Routes>
-                        <Route
-                            exact
-                            path={ROUTES.LOGIN}
-                            element={
-                                authState.isAuth ? (
-                                    <Navigate to={ROUTES.DASHBOARD} />
-                                ) : (
-                                    <Login />
-                                )
-                            }
-                        ></Route>
-                        <Route
-                            exact
-                            path={ROUTES.SIGN_UP}
-                            element={
-                                authState.isAuth ? (
-                                    <Navigate to={ROUTES.DASHBOARD} />
-                                ) : (
-                                    <SignUp />
-                                )
-                            }
-                        ></Route>
-                        <Route
-                            exact
-                            path="/"
-                            element={
-                                <ProtectedRoute isAuth={authState.isAuth} />
-                            }
-                        >
+                <ChatProvider>
+                    <GlobalStyle />
+                    <NavBar toggleTheme={toggleTheme} />
+
+                    <AppDiv>
+                        <Routes>
                             <Route
                                 exact
-                                index
-                                element={<Dashboard />}
+                                path={ROUTES.LOGIN}
+                                element={
+                                    authState.isAuth ? (
+                                        <Navigate to={ROUTES.DASHBOARD} />
+                                    ) : (
+                                        <Login />
+                                    )
+                                }
                             ></Route>
                             <Route
                                 exact
-                                path={ROUTES.SEARCH}
-                                element={<Search />}
+                                path={ROUTES.SIGN_UP}
+                                element={
+                                    authState.isAuth ? (
+                                        <Navigate to={ROUTES.DASHBOARD} />
+                                    ) : (
+                                        <SignUp />
+                                    )
+                                }
                             ></Route>
                             <Route
                                 exact
-                                path={ROUTES.PROFILE}
-                                element={<Profile />}
-                            ></Route>
-                            <Route
-                                exact
-                                path={ROUTES.EDIT_PROFILE}
-                                element={<EditProfile />}
-                            ></Route>
-                        </Route>
-                    </Routes>
-                </AppDiv>
+                                path="/"
+                                element={
+                                    <ProtectedRoute isAuth={authState.isAuth} />
+                                }
+                            >
+                                <Route
+                                    exact
+                                    index
+                                    element={<Dashboard />}
+                                ></Route>
+                                <Route
+                                    exact
+                                    path={ROUTES.SEARCH}
+                                    element={<Search />}
+                                ></Route>
+                                <Route
+                                    exact
+                                    path={ROUTES.PROFILE}
+                                    element={<Profile />}
+                                ></Route>
+                                <Route
+                                    exact
+                                    path={ROUTES.EDIT_PROFILE}
+                                    element={<EditProfile />}
+                                ></Route>
+                            </Route>
+                        </Routes>
+                    </AppDiv>
+                </ChatProvider>
             </ThemeProvider>
         </>
     );

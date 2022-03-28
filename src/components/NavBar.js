@@ -9,6 +9,7 @@ import RequestsService from "../services/RequestsService";
 import Badge from "@mui/material/Badge";
 import GroupIcon from "@mui/icons-material/Group";
 import { red } from "@mui/material/colors";
+import ConversationsService from "../services/ConversationsService";
 
 const NavBarContainer = styled.div`
     min-height: 60px;
@@ -135,15 +136,22 @@ export const NavBar = ({ toggleTheme }) => {
     const [activeSidePannel, setActiveSidePannel] = useState(false);
     const [sidePannelContent, setSidePannelContent] = useState("");
     const [requests, setRequests] = useState([]);
+    const [chats, setChats] = useState([]);
 
     async function getReq() {
         let res = await RequestsService.getRequests();
         // console.log(res.data);
         setRequests(res.data);
     }
+    async function getChats() {
+        let res = await ConversationsService.getConversations();
+        //console.log(res.data);
+        setChats(res.data);
+    }
 
     useEffect(() => {
         getReq();
+        getChats();
     }, []);
 
     function toggleSidePannel() {
@@ -212,6 +220,7 @@ export const NavBar = ({ toggleTheme }) => {
                                         sidePannelContent == "Chats" ||
                                         !activeSidePannel
                                     ) {
+                                        getChats();
                                         toggleSidePannel();
                                     }
                                     setSidePannelContent("Chats");
@@ -302,6 +311,7 @@ export const NavBar = ({ toggleTheme }) => {
                         active={activeSidePannel}
                         title={sidePannelContent}
                         setRequests={setRequests}
+                        chats={chats}
                     />
                 </>
             )}
