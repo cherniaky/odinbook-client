@@ -50,6 +50,7 @@ const ChatProvider = ({ children }) => {
         );
         return () => {};
     }, [conversations]);
+    
     useEffect(() => {
         console.log("active", activeChats);
         return () => {};

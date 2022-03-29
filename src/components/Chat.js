@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+    createContext,
+    useContext,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
 import ConversationsService from "../services/ConversationsService";
 import { AnimatePresence, motion } from "framer-motion";
 import styled, { keyframes } from "styled-components";
@@ -50,12 +56,11 @@ const ChatContent = styled.div`
 const Message = styled.div`
     border-radius: 5px;
 
-   // display: flex;
+    // display: flex;
     align-items: flex-end;
 
     padding: 10px;
-   
-   
+
     background-color: ${({ theme }) => theme.bodyBg};
     width: fit-content;
     max-width: 70%;
@@ -71,12 +76,17 @@ const MessageDate = styled.div`
     font-size: 10px;
     color: ${({ theme }) => theme.secondaryFontColour};
     align-self: flex-end;
-   // margin-left: 15px;
+    // margin-left: 15px;
 `;
 
 export const Chat = ({ notMe, toggleChat, chat }) => {
     const [messages, setMessages] = useState([]);
     const { authState } = useContext(AuthContext);
+    const messagesEndRef = useRef(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
 
     async function getMessages(id) {
         let res = await ConversationsService.getMessages(id);
@@ -89,12 +99,19 @@ export const Chat = ({ notMe, toggleChat, chat }) => {
 
     useEffect(() => {
         get();
-
+        scrollToBottom();
         return () => {};
     }, []);
+    
+    useEffect(() => {
+        get();
+        scrollToBottom();
+        return () => {};
+    }, [chat]);
+
     useEffect(() => {
         // console.log(messages);
-
+        scrollToBottom();
         return () => {};
     }, [messages]);
 
@@ -153,6 +170,7 @@ export const Chat = ({ notMe, toggleChat, chat }) => {
                                     </>
                                 );
                             })}{" "}
+                        <div ref={messagesEndRef} />
                     </ChatContent>
                 </ChatContainer>
             </Draggable>
