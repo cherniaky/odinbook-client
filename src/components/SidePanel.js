@@ -45,6 +45,7 @@ const ChatItem = styled(RequestItem)`
     border-radius: 5px;
     cursor: pointer;
     justify-content: start;
+    max-width: 350px;
     border-bottom: 1px solid ${({ theme }) => theme.mainFontColour};
 
     &:hover {
@@ -170,7 +171,14 @@ const SidePanel = ({ active, title, requests, setRequests, authId, chats }) => {
                                                     chat.lastMessage.sender
                                                         .familyName
                                                 }
-                                                : {chat.lastMessage.text}
+                                                :{" "}
+                                                {chat.lastMessage.text.length >
+                                                17
+                                                    ? chat.lastMessage.text.slice(
+                                                          0,
+                                                          17
+                                                      ) + "..."
+                                                    : chat.lastMessage.text}
                                             </p>
                                         </FlexColumn>
                                     </ChatItem>

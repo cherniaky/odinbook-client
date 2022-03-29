@@ -4,42 +4,9 @@ import { AuthContext } from "./authContext";
 import { AnimatePresence, motion } from "framer-motion";
 import styled, { keyframes } from "styled-components";
 import Draggable from "react-draggable";
+import { Chat } from "../components/Chat";
 
 const ChatContext = createContext();
-
-const ChatContainer = styled.div`
-    background-color: ${({ theme }) => theme.cardBg};
-    color: ${({ theme }) => theme.mainFontColour};
-    border-radius: 5px;
-    box-shadow: ${(props) => props.theme.shadowColour} 0px 1px 2px;
-    min-width: 300px;
-    height: 100px;
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    z-index: 3;
-`;
-
-const ChatHeader = styled.div`
-    & i {
-        font-size: 25px;
-    }
-    & i:hover {
-        color: ${({ theme }) => theme.red};
-    }
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    background-color: ${({ theme }) => theme.headerColour};
-    padding: 10px;
-    font-size: 20px;
-`;
-
-const ChatContent = styled.div`
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-`;
 
 const ChatProvider = ({ children }) => {
     const [activeChats, setActiveChats] = useState([]);
@@ -54,6 +21,7 @@ const ChatProvider = ({ children }) => {
 
     useEffect(() => {
         refreshConversations();
+
         return () => {};
     }, []);
 
@@ -71,18 +39,26 @@ const ChatProvider = ({ children }) => {
         return;
     }
     useEffect(() => {
-        // console.log("active", activeChats);
+        console.log(conversations);
+        setActiveChats(
+            conversations.filter((conv) => {
+                if (activeChats.some(({ _id }) => _id == conv._id)) {
+                    return true;
+                }
+                return false;
+            })
+        );
+        return () => {};
+    }, [conversations]);
+    useEffect(() => {
+        console.log("active", activeChats);
         return () => {};
     }, [activeChats]);
-
-    async function getMessages(id) {
-        let res = await ConversationsService.getMessages(id);
-        return res.data;
-    }
 
     return (
         <ChatContext.Provider
             value={{
+                conversations,
                 activeChats,
                 setActiveChats,
                 refreshConversations,
@@ -97,51 +73,13 @@ const ChatProvider = ({ children }) => {
                         (person) => person._id != authState.user._id
                     );
 
-                    let messages;
-                    async function get() {
-                        messages = await getMessages(chat._id);
-
-                        console.log(messages);
-                    }
-                    get();
-
                     return (
-                        <AnimatePresence key={chat._id}>
-                            <Draggable handle=".handle">
-                                <ChatContainer
-                                    as={motion.div}
-                                    initial={{ heigth: 0, opacity: 0 }}
-                                    animate={{
-                                        heigth: "auto",
-                                        opacity: 1,
-                                    }}
-                                    exit={{
-                                        heigth: 0,
-                                        opacity: 0,
-                                    }}
-                                    transition={{
-                                        duration: 0.2,
-                                    }}
-                                >
-                                    <ChatHeader className="handle">
-                                        {notMe.firstName} {notMe.familyName}
-                                        <i
-                                            onClick={() => {
-                                                toggleChat(chat._id);
-                                            }}
-                                            className="fa-solid fa-xmark"
-                                        ></i>
-                                    </ChatHeader>
-                                    <ChatContent>
-                                        {" "}
-                                        {messages &&
-                                            messages.map((message) => {
-                                                return <>{message.text}</>;
-                                            })}{" "}
-                                    </ChatContent>
-                                </ChatContainer>
-                            </Draggable>
-                        </AnimatePresence>
+                        <Chat
+                            key={chat._id}
+                            notMe={notMe}
+                            toggleChat={toggleChat}
+                            chat={chat}
+                        />
                     );
                 })}
         </ChatContext.Provider>

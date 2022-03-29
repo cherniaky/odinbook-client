@@ -10,6 +10,7 @@ import Badge from "@mui/material/Badge";
 import GroupIcon from "@mui/icons-material/Group";
 import { red } from "@mui/material/colors";
 import ConversationsService from "../services/ConversationsService";
+import { ChatContext } from "../contexts/chatContext";
 
 const NavBarContainer = styled.div`
     min-height: 60px;
@@ -131,6 +132,7 @@ const BarsSection = styled.section`
 export const NavBar = ({ toggleTheme }) => {
     const navigate = useNavigate();
     const { authState, dispatch } = useContext(AuthContext);
+    const { conversations, refreshConversations } = useContext(ChatContext);
     const [showMobileMenu, setShowMobileMenu] = useState(false);
     const [searchValue, setSearchValue] = useState("");
     const [activeSidePannel, setActiveSidePannel] = useState(false);
@@ -144,9 +146,10 @@ export const NavBar = ({ toggleTheme }) => {
         setRequests(res.data);
     }
     async function getChats() {
-        let res = await ConversationsService.getConversations();
+        refreshConversations();
+        // let res = await ConversationsService.getConversations();
         //console.log(res.data);
-        setChats(res.data);
+        setChats(conversations);
     }
 
     useEffect(() => {
