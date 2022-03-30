@@ -8,6 +8,7 @@ import makeDateAgo from "../helpers/makeDateAgo";
 import { NotificationsContext } from "../contexts/notifyContext";
 import { AnimatePresence, motion } from "framer-motion";
 import RequestsService from "../services/RequestsService";
+import ConversationsService from "../services/ConversationsService";
 import { ChatContext } from "../contexts/chatContext";
 
 const PanelContainer = styled.div`
@@ -83,19 +84,25 @@ const ChatImg = styled.img`
     margin-right: 10px;
 `;
 
-const SidePanel = ({ active, title, requests, setRequests, authId ,chats}) => {
+const SidePanel = ({ active, title, requests, setRequests, authId }) => {
     let navigate = useNavigate();
     const { toggleChat, conversations } = useContext(ChatContext);
-  //  const [chats, setChats] = useState(conversations || []);
+    const [chats, setChats] = useState(conversations || []);
     async function handleAcceptFriend(userId, reqId) {
         await RequestsService.acceptRequest(userId);
         setRequests(requests.filter((req) => req._id != reqId));
     }
 
-    // useEffect(() => {
-    //     setChats(conversations);
-    //     return () => {};
-    // }, [conversations]);
+    useEffect(() => {
+        async function getChats() {
+            let res = await ConversationsService.getConversations();
+
+            setChats(res.data);
+        }
+        getChats();
+        //setChats(conversations);
+        return () => {};
+    }, [conversations]);
 
     const getContent = () => {
         switch (title) {
@@ -170,12 +177,12 @@ const SidePanel = ({ active, title, requests, setRequests, authId ,chats}) => {
                                                 : `${chat.participants[0].firstName} ${chat.participants[0].familyName}`}
                                             <p>
                                                 {
-                                                    chat.lastMessage.sender
-                                                        .firstName
+                                                    chat.lastMessage?.sender
+                                                        ?.firstName
                                                 }{" "}
                                                 {
-                                                    chat.lastMessage.sender
-                                                        .familyName
+                                                    chat.lastMessage?.sender
+                                                        ?.familyName
                                                 }
                                                 :{" "}
                                                 {chat.lastMessage.text.length >

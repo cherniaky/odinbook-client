@@ -169,7 +169,7 @@ const SideBar = () => {
         refreshConversations();
     }
 
-    if (user == {}) {
+    if (!user) {
         return <>Loading</>;
     }
     return (

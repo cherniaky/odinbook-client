@@ -15,7 +15,7 @@ const ChatProvider = ({ children }) => {
 
     async function refreshConversations() {
         let res = await ConversationsService.getConversations();
-        //  console.log(res.data);
+      console.log(res.data);
         setConversations(res.data);
     }
 
@@ -39,7 +39,7 @@ const ChatProvider = ({ children }) => {
         return;
     }
     useEffect(() => {
-        console.log(conversations);
+        //console.log(conversations);
         setActiveChats(
             conversations.filter((conv) => {
                 if (activeChats.some(({ _id }) => _id == conv._id)) {
