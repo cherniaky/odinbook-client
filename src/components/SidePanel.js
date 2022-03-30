@@ -83,13 +83,19 @@ const ChatImg = styled.img`
     margin-right: 10px;
 `;
 
-const SidePanel = ({ active, title, requests, setRequests, authId, chats }) => {
+const SidePanel = ({ active, title, requests, setRequests, authId ,chats}) => {
     let navigate = useNavigate();
-    const { toggleChat } = useContext(ChatContext);
+    const { toggleChat, conversations } = useContext(ChatContext);
+  //  const [chats, setChats] = useState(conversations || []);
     async function handleAcceptFriend(userId, reqId) {
         await RequestsService.acceptRequest(userId);
         setRequests(requests.filter((req) => req._id != reqId));
     }
+
+    // useEffect(() => {
+    //     setChats(conversations);
+    //     return () => {};
+    // }, [conversations]);
 
     const getContent = () => {
         switch (title) {

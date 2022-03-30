@@ -151,6 +151,11 @@ export const NavBar = ({ toggleTheme }) => {
         //console.log(res.data);
         setChats(conversations);
     }
+    
+    useEffect(() => {
+        setChats(conversations);
+        return () => {};
+    }, [conversations]);
 
     useEffect(() => {
         getReq();
