@@ -145,7 +145,6 @@ export const Chat = ({ notMe, toggleChat, chat }) => {
         <AnimatePresence>
             <Draggable handle=".handle">
                 <ChatContainer
-                    key={chat._id}
                     as={motion.div}
                     initial={{ heigth: 0, opacity: 0 }}
                     animate={{
@@ -160,55 +159,48 @@ export const Chat = ({ notMe, toggleChat, chat }) => {
                         duration: 0.2,
                     }}
                 >
-                    <ChatHeader key={chat._id} className="handle">
+                    <ChatHeader className="handle">
                         {notMe.firstName} {notMe.familyName}
                         <i
-                            key={chat._id}
                             onClick={() => {
                                 toggleChat(chat._id);
                             }}
                             className="fa-solid fa-xmark"
                         ></i>
                     </ChatHeader>
-                    <ChatContent key={chat._id + "1"}>
+                    <ChatContent>
                         {" "}
                         {messages &&
                             messages.map((message) => {
                                 if (message.sender._id == authState.user._id) {
                                     return (
                                         <MyMessage key={message._id}>
-                                            <MessageText key={message._id}>
+                                            <MessageText>
                                                 {" "}
                                                 {message.text}
                                             </MessageText>
-                                            <MessageDate
-                                                key={message._id + "f"}
-                                            >
+                                            <MessageDate>
                                                 {makeDateAgo(message.date)} ago
                                             </MessageDate>
                                         </MyMessage>
                                     );
-                                }
-                                return (
-                                    <>
+                                } else {
+                                    return (
                                         <Message key={message._id}>
-                                            <MessageText key={message._id}>
+                                            <MessageText>
                                                 {" "}
                                                 {message.text}
                                             </MessageText>
-                                            <MessageDate
-                                                key={message._id + "d"}
-                                            >
+                                            <MessageDate>
                                                 {makeDateAgo(message.date)} ago
                                             </MessageDate>
                                         </Message>
-                                    </>
-                                );
+                                    );
+                                }
                             })}{" "}
                         <div ref={messagesEndRef} />
                     </ChatContent>
                     <ChatForm
-                        key={chat._id + "2"}
                         onSubmit={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
@@ -216,18 +208,13 @@ export const Chat = ({ notMe, toggleChat, chat }) => {
                         }}
                     >
                         <input
-                            key={chat._id + "2"}
                             value={newMessageText}
                             onChange={(e) => {
                                 setNewMessageText(e.target.value);
                             }}
                             type="text"
                         />
-                        <input
-                            key={chat._id + "3"}
-                            type="submit"
-                            value="Send"
-                        />
+                        <input type="submit" value="Send" />
                     </ChatForm>
                 </ChatContainer>
             </Draggable>
