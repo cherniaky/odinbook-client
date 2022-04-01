@@ -186,6 +186,13 @@ export const NavBar = ({ toggleTheme }) => {
         setSearchValue("");
         // <Navigate to={`${ROUTES.SEARCH}?user=${text}`} />;
     };
+    const handleOpenSidePanel = (text) =>{
+         if (sidePannelContent == text || !activeSidePannel) {
+             getChats();
+             toggleSidePannel();
+         }
+         setSidePannelContent(text);
+    }
     return (
         <>
             <NavBarContainer>
@@ -230,14 +237,7 @@ export const NavBar = ({ toggleTheme }) => {
                         <NavSection>
                             <NavLink
                                 onClick={() => {
-                                    if (
-                                        sidePannelContent == "Chats" ||
-                                        !activeSidePannel
-                                    ) {
-                                        getChats();
-                                        toggleSidePannel();
-                                    }
-                                    setSidePannelContent("Chats");
+                                    handleOpenSidePanel("Chats");
                                 }}
                             >
                                 <Badge
@@ -258,28 +258,23 @@ export const NavBar = ({ toggleTheme }) => {
                             </NavLink>
                             <NavLink
                                 onClick={() => {
-                                    if (
-                                        sidePannelContent == "Notifications" ||
-                                        !activeSidePannel
-                                    ) {
-                                        toggleSidePannel();
-                                    }
-                                    setSidePannelContent("Notifications");
+                                    handleOpenSidePanel("Notifications");
                                 }}
                             >
                                 <i className="fas fa-bell"></i>
                             </NavLink>
                             <NavLink
                                 onClick={() => {
-                                    if (
-                                        sidePannelContent ==
-                                            "Friend requests" ||
-                                        !activeSidePannel
-                                    ) {
-                                        getReq();
-                                        toggleSidePannel();
-                                    }
-                                    setSidePannelContent("Friend requests");
+                                     handleOpenSidePanel("Friend requests");
+                                    // if (
+                                    //     sidePannelContent ==
+                                    //         "Friend requests" ||
+                                    //     !activeSidePannel
+                                    // ) {
+                                    //     getReq();
+                                    //     toggleSidePannel();
+                                    // }
+                                    // setSidePannelContent("Friend requests");
                                 }}
                             >
                                 <Badge
@@ -327,6 +322,8 @@ export const NavBar = ({ toggleTheme }) => {
             {authState.isAuth && (
                 <>
                     <MobileNav
+                        toggleSidePannel={toggleSidePannel}
+                        handleOpenSidePanel={handleOpenSidePanel}
                         show={showMobileMenu}
                         toggleMobile={toggleMobile}
                         searchValue={searchValue}

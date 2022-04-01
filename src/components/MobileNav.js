@@ -143,6 +143,8 @@ export const MobileNav = ({
     searchValue,
     setSearchValue,
     handleSearch,
+    toggleSidePannel,
+    handleOpenSidePanel,
 }) => {
     const { authState, dispatch } = useContext(AuthContext);
 
@@ -164,7 +166,7 @@ export const MobileNav = ({
                     search={true}
                     onClick={() => {
                         handleNavItem();
-                       handleSearch(searchValue);
+                        handleSearch(searchValue);
                     }}
                 >
                     Search
@@ -184,14 +186,29 @@ export const MobileNav = ({
                     Your profile
                 </NavItem>
             </Link>
-            <NavItem>
+            <NavItem
+                onClick={() => {
+                    handleNavItem();
+                    handleOpenSidePanel("Chats");
+                }}
+            >
                 {" "}
                 <i className="fas fa-envelope"></i>Messages
             </NavItem>
-            <NavItem>
+            <NavItem
+                onClick={() => {
+                    handleNavItem();
+                    handleOpenSidePanel("Friend requests");
+                }}
+            >
                 <i className="fas fa-user-friends"></i>Friend requests
             </NavItem>
-            <NavItem>
+            <NavItem
+                onClick={() => {
+                    handleNavItem();
+                    handleOpenSidePanel("Notifications");
+                }}
+            >
                 {" "}
                 <i className="fas fa-bell"></i>Notifications
             </NavItem>

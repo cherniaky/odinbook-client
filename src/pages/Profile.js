@@ -8,6 +8,7 @@ import Post from "../components/Post";
 import SideBar from "../components/SideBar";
 import UsersService from "../services/UsersService";
 import { NotificationsContext } from "../contexts/notifyContext";
+import { ClipLoader } from "react-spinners";
 
 const ProfileContainer = styled.div`
     width: 90%;
@@ -115,8 +116,14 @@ const NoPostForm = styled.div`
     text-align: center;
     font-size: 30px;
 `;
+const LoaderDiv = styled.div`
+    display: flex;
 
+    align-items: center;
+    justify-content: center;
+`;
 const Profile = () => {
+    
     const { userID } = useParams();
     const [showPostForm, setShowPostForm] = useState(false);
     const [user, setUser] = useState({});
@@ -124,6 +131,7 @@ const Profile = () => {
     const { Open } = useContext(NotificationsContext);
     const [PostValue, setPostValue] = useState("");
     const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(false)
 
     function togglePostForm() {
         return setShowPostForm(!showPostForm);
@@ -131,8 +139,10 @@ const Profile = () => {
 
     useEffect(() => {
         async function getPosts() {
+            setLoading(true)
             let response = await PostsService.getPostsReciever(userID);
             setPosts(response.data);
+            setLoading(false)
         }
         getPosts();
         async function getUser() {
@@ -228,6 +238,14 @@ const Profile = () => {
                                 />
                             );
                         })
+                    ) : loading ? (
+                        <LoaderDiv>
+                            <ClipLoader
+                                color="lightblue"
+                                loading={true}
+                                size={150}
+                            />
+                        </LoaderDiv>
                     ) : (
                         <NoPostForm>No posts</NoPostForm>
                     )}

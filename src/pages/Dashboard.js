@@ -108,13 +108,13 @@ const Dashboard = () => {
     }
 
     useEffect(() => {
-        setLoading(true);
         async function getPosts() {
+            setLoading(true);
             let response = await PostsService.getPosts();
             setPosts(response.data);
+            setLoading(false);
         }
         getPosts();
-        setLoading(false);
         // console.log(posts);
         return () => {};
     }, []);
@@ -186,14 +186,13 @@ const Dashboard = () => {
                         );
                     })
                 ) : loading ? (
-                    <>LoaderDiv</>
-                    // <LoaderDiv>
-                    //     <ClipLoader
-                    //         color="lightblue"
-                    //         loading={true}
-                    //         size={150}
-                    //     />
-                    // </LoaderDiv>
+                    <LoaderDiv>
+                        <ClipLoader
+                            color="lightblue"
+                            loading={true}
+                            size={150}
+                        />
+                    </LoaderDiv>
                 ) : (
                     <NoPostForm>No posts</NoPostForm>
                 )}

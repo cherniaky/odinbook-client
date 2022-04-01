@@ -27,6 +27,10 @@ const PanelContainer = styled.div`
     box-shadow: ${(props) => props.theme.shadowColour} 0px 1px 2px;
     color: ${({ theme }) => theme.mainFontColour};
     z-index: 2;
+    @media screen and (max-width: 890px) {
+       
+        width: 100%;
+    }
     // border-radius: 5px;
 `;
 
@@ -46,7 +50,9 @@ const ChatItem = styled(RequestItem)`
     border-radius: 5px;
     cursor: pointer;
     justify-content: start;
-    max-width: 350px;
+    //max-width: 100%;
+    width: 100%;
+    min-width: 300px;
     margin-top: 5px;
     border-bottom: 1px solid ${({ theme }) => theme.mainFontColour};
     background-color: ${(props) => (props.seen ? "" : props.theme.secondaryBg)};
@@ -84,6 +90,11 @@ const ChatImg = styled.img`
     height: 40px;
     margin-right: 10px;
 `;
+const ListFlex = styled.ul`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const SidePanel = ({ active, title, requests, setRequests, authId }) => {
     let navigate = useNavigate();
@@ -109,7 +120,7 @@ const SidePanel = ({ active, title, requests, setRequests, authId }) => {
         switch (title) {
             case "Friend requests":
                 return (
-                    <ul>
+                    <ListFlex>
                         {requests.length != 0 ? (
                             requests.map((req) => {
                                 return (
@@ -135,11 +146,11 @@ const SidePanel = ({ active, title, requests, setRequests, authId }) => {
                         ) : (
                             <>You have no pending requests</>
                         )}
-                    </ul>
+                    </ListFlex>
                 );
             case "Chats":
                 return (
-                    <ul>
+                    <ListFlex>
                         {chats.length != 0 ? (
                             chats.map((chat) => {
                                 //  console.log(chat.lastMessage.sender , authId);
@@ -208,7 +219,7 @@ const SidePanel = ({ active, title, requests, setRequests, authId }) => {
                         ) : (
                             <>No chats</>
                         )}
-                    </ul>
+                    </ListFlex>
                 );
             default:
                 return "Nothing new";
