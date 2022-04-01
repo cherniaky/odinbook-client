@@ -47,8 +47,9 @@ const ChatItem = styled(RequestItem)`
     cursor: pointer;
     justify-content: start;
     max-width: 350px;
+    margin-top: 5px;
     border-bottom: 1px solid ${({ theme }) => theme.mainFontColour};
-
+    background-color: ${(props) => (props.seen ? "" : props.theme.secondaryBg)};
     &:hover {
         background-color: ${({ theme }) => theme.secondaryBg};
     }
@@ -141,34 +142,41 @@ const SidePanel = ({ active, title, requests, setRequests, authId }) => {
                     <ul>
                         {chats.length != 0 ? (
                             chats.map((chat) => {
+                                //  console.log(chat.lastMessage.sender , authId);
                                 return (
                                     <ChatItem
                                         key={chat._id}
+                                        seen={
+                                            chat.lastMessage.sender._id !==
+                                            authId
+                                                ? chat.lastMessage.seen
+                                                : true
+                                        }
                                         onClick={() => {
                                             toggleChat(chat._id);
                                         }}
                                     >
-                                        {chat.participants[0]._id == authId
-                                            ? (
-                                                  <ChatImg
-                                                      src={
-                                                          chat.participants[1]
-                                                              .profilePic
-                                                      }
-                                                  />
-                                              ) || (
-                                                  <i className="fa-regular fa-circle-user"></i>
-                                              )
-                                            : (
-                                                  <ChatImg
-                                                      src={
-                                                          chat.participants[0]
-                                                              .profilePic
-                                                      }
-                                                  />
-                                              ) || (
-                                                  <i className="fa-regular fa-circle-user"></i>
-                                              )}
+                                        {chat.participants[0]._id == authId ? (
+                                            chat.participants[1].profilePic ? (
+                                                <ChatImg
+                                                    src={
+                                                        chat.participants[1]
+                                                            .profilePic
+                                                    }
+                                                />
+                                            ) : (
+                                                <i className="fa-regular fa-circle-user"></i>
+                                            )
+                                        ) : chat.participants[0].profilePic ? (
+                                            <ChatImg
+                                                src={
+                                                    chat.participants[0]
+                                                        .profilePic
+                                                }
+                                            />
+                                        ) : (
+                                            <i className="fa-regular fa-circle-user"></i>
+                                        )}
 
                                         <FlexColumn>
                                             {" "}

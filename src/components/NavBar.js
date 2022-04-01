@@ -11,6 +11,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import { red } from "@mui/material/colors";
 import ConversationsService from "../services/ConversationsService";
 import { ChatContext } from "../contexts/chatContext";
+import EmailIcon from "@mui/icons-material/Email";
 
 const NavBarContainer = styled.div`
     min-height: 60px;
@@ -153,9 +154,14 @@ export const NavBar = ({ toggleTheme }) => {
     }
 
     // useEffect(() => {
-    //     setChats(conversations);
+    //     console.log(chats);
     //     return () => {};
-    // }, [conversations]);
+    // }, [chats]);
+
+    useEffect(() => {
+        setChats(conversations);
+        return () => {};
+    }, [conversations]);
 
     useEffect(() => {
         getReq();
@@ -234,7 +240,21 @@ export const NavBar = ({ toggleTheme }) => {
                                     setSidePannelContent("Chats");
                                 }}
                             >
-                                <i className="fas fa-envelope"></i>
+                                <Badge
+                                    badgeContent={
+                                        chats.some((chat) => {
+                                            return chat.lastMessage.sender
+                                                ._id !== authState.user._id
+                                                ? !chat.lastMessage.seen
+                                                : false;
+                                        })
+                                            ? "New"
+                                            : 0
+                                    }
+                                    color="error"
+                                >
+                                    <EmailIcon />
+                                </Badge>
                             </NavLink>
                             <NavLink
                                 onClick={() => {

@@ -12,6 +12,8 @@ import { AuthContext } from "../contexts/authContext";
 import Draggable from "react-draggable";
 import makeDateAgo from "../helpers/makeDateAgo";
 import { NotificationsContext } from "../contexts/notifyContext";
+import { ChatContext } from "../contexts/chatContext";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const ChatContainer = styled.div`
     background-color: ${({ theme }) => theme.cardBg};
@@ -100,11 +102,18 @@ const ChatForm = styled.form`
         width: fit-content;
     }
 `;
+const LoaderDiv = styled.div`
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+`;
 
 export const Chat = ({ notMe, toggleChat, chat }) => {
     const [messages, setMessages] = useState([]);
     const { authState } = useContext(AuthContext);
     const { Open } = useContext(NotificationsContext);
+    const { refreshConversations } = useContext(ChatContext);
     const [newMessageText, setNewMessageText] = useState("");
     const messagesEndRef = useRef(null);
 
@@ -123,7 +132,8 @@ export const Chat = ({ notMe, toggleChat, chat }) => {
 
     async function handleSendMessage(id, text) {
         let res = await ConversationsService.sendMessage(id, text);
-        console.log(res);
+        //console.log(res);
+        refreshConversations();
         setMessages([...messages, res.data]);
         Open("Message send");
         setNewMessageText("");
@@ -170,7 +180,7 @@ export const Chat = ({ notMe, toggleChat, chat }) => {
                     </ChatHeader>
                     <ChatContent>
                         {" "}
-                        {messages &&
+                        {messages.length != 0 ? (
                             messages.map((message) => {
                                 if (message.sender._id == authState.user._id) {
                                     return (
@@ -197,7 +207,16 @@ export const Chat = ({ notMe, toggleChat, chat }) => {
                                         </Message>
                                     );
                                 }
-                            })}{" "}
+                            })
+                        ) : (
+                            <LoaderDiv>
+                                <ClipLoader
+                                    color="lightblue"
+                                    loading={true}
+                                    size={50}
+                                />
+                            </LoaderDiv>
+                        )}{" "}
                         <div ref={messagesEndRef} />
                     </ChatContent>
                     <ChatForm

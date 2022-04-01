@@ -15,7 +15,7 @@ const ChatProvider = ({ children }) => {
 
     async function refreshConversations() {
         let res = await ConversationsService.getConversations();
-      //console.log(res.data);
+        //console.log(res.data);
         setConversations(res.data);
     }
 
@@ -36,6 +36,8 @@ const ChatProvider = ({ children }) => {
             ...activeChats,
             conversations.find((conv) => conv._id == id),
         ]);
+
+        refreshConversations();
         return;
     }
     useEffect(() => {
@@ -52,7 +54,7 @@ const ChatProvider = ({ children }) => {
     }, [conversations]);
 
     useEffect(() => {
-       // console.log("active", activeChats);
+        // console.log("active", activeChats);
         return () => {};
     }, [activeChats]);
 
@@ -68,7 +70,7 @@ const ChatProvider = ({ children }) => {
         >
             {children}
 
-            {activeChats.length != 0 &&
+            {authState.isAuth && activeChats.length != 0 &&
                 activeChats.map((chat) => {
                     let [notMe] = chat.participants.filter(
                         (person) => person._id != authState.user._id

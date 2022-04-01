@@ -6,6 +6,7 @@ import { AuthContext } from "../contexts/authContext";
 import PostsService from "../services/PostsService";
 import Post from "../components/Post";
 import { NotificationsContext } from "../contexts/notifyContext";
+import { ClipLoader } from "react-spinners";
 
 const DashboardContainer = styled.div`
     width: 55%;
@@ -89,23 +90,31 @@ const NoPostForm = styled.div`
     text-align: center;
     font-size: 30px;
 `;
+const LoaderDiv = styled.div`
+    display: flex;
 
+    align-items: center;
+    justify-content: center;
+`;
 const Dashboard = () => {
     const [showPostForm, setShowPostForm] = useState(false);
     const [PostValue, setPostValue] = useState("");
     const [posts, setPosts] = useState([]);
     const { Open } = useContext(NotificationsContext);
+    const [loading, setLoading] = useState(false);
 
     function togglePostForm() {
         return setShowPostForm(!showPostForm);
     }
 
     useEffect(() => {
+        setLoading(true);
         async function getPosts() {
             let response = await PostsService.getPosts();
             setPosts(response.data);
         }
         getPosts();
+        setLoading(false);
         // console.log(posts);
         return () => {};
     }, []);
@@ -119,10 +128,10 @@ const Dashboard = () => {
         del();
     }
 
-    useEffect(() => {
-        // console.log(posts);
-        return () => {};
-    }, [posts]);
+    // useEffect(() => {
+    //     // console.log(posts);
+    //     return () => {};
+    // }, [posts]);
 
     return (
         <DashboardContainer>
@@ -176,6 +185,15 @@ const Dashboard = () => {
                             />
                         );
                     })
+                ) : loading ? (
+                    <>LoaderDiv</>
+                    // <LoaderDiv>
+                    //     <ClipLoader
+                    //         color="lightblue"
+                    //         loading={true}
+                    //         size={150}
+                    //     />
+                    // </LoaderDiv>
                 ) : (
                     <NoPostForm>No posts</NoPostForm>
                 )}
