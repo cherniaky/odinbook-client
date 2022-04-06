@@ -159,6 +159,7 @@ export const NavBar = ({ toggleTheme }) => {
     // }, [chats]);
 
     useEffect(() => {
+       // console.log(conversations); 
         setChats(conversations);
         return () => {};
     }, [conversations]);
@@ -265,7 +266,7 @@ export const NavBar = ({ toggleTheme }) => {
                             </NavLink>
                             <NavLink
                                 onClick={() => {
-                                     handleOpenSidePanel("Friend requests");
+                                    handleOpenSidePanel("Friend requests");
                                     // if (
                                     //     sidePannelContent ==
                                     //         "Friend requests" ||
@@ -331,6 +332,7 @@ export const NavBar = ({ toggleTheme }) => {
                         handleSearch={handleSearch}
                     />
                     <SidePanel
+                        toggleSidePannel={toggleSidePannel}
                         authId={authState.user._id}
                         requests={requests}
                         active={activeSidePannel}

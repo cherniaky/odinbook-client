@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import styled, { keyframes } from "styled-components";
 import Draggable from "react-draggable";
 import { Chat } from "../components/Chat";
+import useMediaQuery from "../helpers/useMediaQuery";
 
 const ChatContext = createContext();
 
@@ -12,10 +13,11 @@ const ChatProvider = ({ children }) => {
     const [activeChats, setActiveChats] = useState([]);
     const [conversations, setConversations] = useState([]);
     const { authState } = useContext(AuthContext);
+    const matches = useMediaQuery("(max-width: 890px)");
 
     async function refreshConversations() {
         let res = await ConversationsService.getConversations();
-        //console.log(res.data);
+        // console.log(res.data);
         setConversations(res.data);
     }
 
@@ -24,6 +26,13 @@ const ChatProvider = ({ children }) => {
 
         return () => {};
     }, []);
+
+    const stopScroll = () => {
+        document.body.classList.add("stopScroll");
+    };
+    const startScroll = () => {
+        document.body.classList.remove("stopScroll");
+    };
 
     function toggleChat(id) {
         //console.log(id);
@@ -55,6 +64,11 @@ const ChatProvider = ({ children }) => {
 
     useEffect(() => {
         // console.log("active", activeChats);
+        if (authState.isAuth && activeChats.length != 0 && matches) {
+            stopScroll();
+        } else {
+            startScroll();
+        }
         return () => {};
     }, [activeChats]);
 
@@ -70,7 +84,8 @@ const ChatProvider = ({ children }) => {
         >
             {children}
 
-            {authState.isAuth && activeChats.length != 0 &&
+            {authState.isAuth &&
+                activeChats.length != 0 &&
                 activeChats.map((chat) => {
                     let [notMe] = chat.participants.filter(
                         (person) => person._id != authState.user._id

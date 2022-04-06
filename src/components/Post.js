@@ -151,6 +151,7 @@ const LikeComment = styled.div`
 
 const ShowComments = styled.button`
     border-radius: 5px;
+    width: 100%;
     cursor: pointer;
     background-color: ${({ theme }) => theme.bodyBg};
     color: ${({ theme }) => theme.mainFontColour};
@@ -291,7 +292,7 @@ const Post = ({ post, handleDeletePost }) => {
                 // console.log(comment);
                 if (i == postComments.length - 1 && !showComments) {
                     return (
-                        <>
+                        <div key={comment._id}>
                             {postComments.length != 1 ? (
                                 <ShowComments
                                     onClick={() => {
@@ -378,11 +379,11 @@ const Post = ({ post, handleDeletePost }) => {
                                     {comment.likes.length}
                                 </LikeComment>
                             </CommentContainer>
-                        </>
+                        </div>
                     );
                 } else if (showComments) {
                     return (
-                        <>
+                        <div key={comment._id}>
                             <CommentContainer key={comment._id}>
                                 {" "}
                                 <b>
@@ -457,7 +458,7 @@ const Post = ({ post, handleDeletePost }) => {
                                     {comment.likes.length}
                                 </LikeComment>
                             </CommentContainer>
-                        </>
+                        </div>
                     );
                 }
             })}

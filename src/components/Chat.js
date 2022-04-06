@@ -14,6 +14,8 @@ import makeDateAgo from "../helpers/makeDateAgo";
 import { NotificationsContext } from "../contexts/notifyContext";
 import { ChatContext } from "../contexts/chatContext";
 import ClipLoader from "react-spinners/ClipLoader";
+import useMediaQuery from "../helpers/useMediaQuery";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 const ChatContainer = styled.div`
     background-color: ${({ theme }) => theme.cardBg};
@@ -22,11 +24,20 @@ const ChatContainer = styled.div`
     box-shadow: ${(props) => props.theme.shadowColour} 0px 1px 2px;
     min-width: 300px;
     height: auto;
-
+    display: flex;
+    flex-direction: column;
     position: fixed;
     bottom: 20px;
     left: 20px;
-    z-index: 3;
+    z-index: 21;
+    @media screen and (max-width: 890px) {
+        width: 100%;
+        top: 0;
+
+        height: 100vh;
+        font-size: 24px;
+        left: 0;
+    }
 `;
 
 const ChatHeader = styled.div`
@@ -36,24 +47,32 @@ const ChatHeader = styled.div`
     & i:hover {
         color: ${({ theme }) => theme.red};
     }
-    cursor: pointer;
+    cursor: ${(props) => (props.isMobile ? "default" : "pointer")};
     display: flex;
     color: white;
     border-radius: 5px;
-    justify-content: space-between;
+    justify-content: ${(props) =>
+        props.isMobile ? "flex-start" : "space-between"};
     background-color: ${({ theme }) => theme.headerColour};
     padding: 10px;
     font-size: 20px;
+    flex-grow: 0;
 `;
 
 const ChatContent = styled.div`
     padding: 10px;
     display: flex;
-    max-height: 400px;
+    height: 400px;
     flex-direction: column;
     max-width: 300px;
     overflow-y: scroll;
     overflow-x: hidden;
+
+    @media screen and (max-width: 890px) {
+       //height: 80vh;
+        flex-grow: 1;
+        max-width: 100%;
+    }
 `;
 
 const Message = styled.div`
@@ -85,6 +104,7 @@ const MessageDate = styled.div`
 const ChatForm = styled.form`
     width: 100%;
     display: flex;
+    flex-grow: 0;
 
     & input[type="text"] {
         background-color: ${({ theme }) => theme.bodyBg};
@@ -116,6 +136,12 @@ export const Chat = ({ notMe, toggleChat, chat }) => {
     const { refreshConversations } = useContext(ChatContext);
     const [newMessageText, setNewMessageText] = useState("");
     const messagesEndRef = useRef(null);
+    const matches = useMediaQuery("(max-width: 890px)");
+
+    useEffect(() => {
+        console.log(matches);
+        return () => {};
+    }, [matches]);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -169,14 +195,19 @@ export const Chat = ({ notMe, toggleChat, chat }) => {
                         duration: 0.2,
                     }}
                 >
-                    <ChatHeader className="handle">
-                        {notMe.firstName} {notMe.familyName}
-                        <i
+                    <ChatHeader
+                        isMobile={matches}
+                        className={matches ? "" : "handle"}
+                    >
+                        <ArrowBackIosIcon
                             onClick={() => {
                                 toggleChat(chat._id);
                             }}
-                            className="fa-solid fa-xmark"
-                        ></i>
+                           
+                        />
+                       
+                        
+                        {notMe.firstName} {notMe.familyName}
                     </ChatHeader>
                     <ChatContent>
                         {" "}

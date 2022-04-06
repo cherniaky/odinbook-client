@@ -9,6 +9,7 @@ import { NotificationsContext } from "../contexts/notifyContext";
 import { AnimatePresence, motion } from "framer-motion";
 import RequestsService from "../services/RequestsService";
 import ConversationsService from "../services/ConversationsService";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { ChatContext } from "../contexts/chatContext";
 
 const PanelContainer = styled.div`
@@ -28,7 +29,6 @@ const PanelContainer = styled.div`
     color: ${({ theme }) => theme.mainFontColour};
     z-index: 2;
     @media screen and (max-width: 890px) {
-       
         width: 100%;
     }
     // border-radius: 5px;
@@ -38,6 +38,8 @@ const PanelTitle = styled.h1`
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 15px;
+    width: 100%;
+    position: relative;
 `;
 const RequestItem = styled.li`
     display: flex;
@@ -91,12 +93,33 @@ const ChatImg = styled.img`
     margin-right: 10px;
 `;
 const ListFlex = styled.ul`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 `;
 
-const SidePanel = ({ active, title, requests, setRequests, authId }) => {
+const GetBackButton = styled.button`
+    position: absolute;
+    color: white;
+    left: 10px;
+    background-color: transparent;
+    cursor: pointer;
+    &:hover {
+        color: ${({ theme }) => theme.headerColour};
+    }
+    transition: 0.1s;
+    border: none;
+    margin-right: auto;
+`;
+
+const SidePanel = ({
+    active,
+    title,
+    requests,
+    setRequests,
+    authId,
+    toggleSidePannel,
+}) => {
     let navigate = useNavigate();
     const { toggleChat, conversations } = useContext(ChatContext);
     const [chats, setChats] = useState(conversations || []);
@@ -115,6 +138,10 @@ const SidePanel = ({ active, title, requests, setRequests, authId }) => {
         //setChats(conversations);
         return () => {};
     }, [conversations]);
+
+    function handleGetBack() {
+        toggleSidePannel();
+    }
 
     const getContent = () => {
         switch (title) {
@@ -240,7 +267,16 @@ const SidePanel = ({ active, title, requests, setRequests, authId }) => {
                         duration: 0.15,
                     }}
                 >
-                    <PanelTitle> {title}</PanelTitle>{" "}
+                    <PanelTitle>
+                        <GetBackButton
+                            onClick={() => {
+                                handleGetBack();
+                            }}
+                        >
+                            <ArrowBackIosIcon />
+                        </GetBackButton>
+                        {title}
+                    </PanelTitle>{" "}
                     <PanelContent>{getContent()}</PanelContent>
                 </PanelContainer>
             )}

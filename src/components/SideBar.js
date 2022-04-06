@@ -161,12 +161,16 @@ const SideBar = () => {
         RequestsService.sendRequest(userID);
         setRequestSendText("Request send");
     }
+
     function handleSendMessage() {
-        ConversationsService.sendMessage(userID, messageText);
-        setMessageText("");
-        setActiveSendMessage(false);
-        Open("Message send");
-        refreshConversations();
+        async function r() {
+            await ConversationsService.sendMessage(userID, messageText);
+            setMessageText("");
+            setActiveSendMessage(false);
+            Open("Message send");
+            await refreshConversations();
+        }
+        r();
     }
 
     if (!user) {
