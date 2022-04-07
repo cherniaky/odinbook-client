@@ -3,6 +3,7 @@ import AuthService from "../services/AuthService";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { API_URL } from "../http";
+import { connectSocket, disconnectFromSocket } from "../socket";
 
 const AuthContext = createContext();
 
@@ -21,13 +22,13 @@ const authReducer = async (authStatePromise, action) => {
                     expires: 15,
                 });
                 localStorage.setItem("token", response.data.accessToken);
-
+                const socket = connectSocket(response.data.user._id);
                 return {
                     ...authState,
                     isAuth: true,
                     token: response.data.accessToken,
                     user: response.data.user,
-                    socket: "",
+                    socket,
                 };
             } catch (error) {
                 return {
@@ -94,13 +95,13 @@ const authReducer = async (authStatePromise, action) => {
                     expires: 15,
                 });
                 localStorage.setItem("token", response.data.accessToken);
-
+                const socket = connectSocket(response.data.user._id);
                 return {
                     ...authState,
                     isAuth: true,
                     token: response.data.accessToken,
                     user: response.data.user,
-                    socket: "",
+                    socket,
                 };
             } catch (error) {
                 return {
@@ -125,13 +126,13 @@ const authReducer = async (authStatePromise, action) => {
                 //  setIsAuth(true);
                 // console.log("is auth", isAuth);
                 // setUser(response.data.user);
-
+                const socket = connectSocket(response.data.user._id);
                 return {
                     ...authState,
                     isAuth: true,
                     token: response.data.accessToken,
                     user: response.data.user,
-                    socket: "",
+                    socket,
                 };
             } catch (error) {
                 return {
@@ -153,12 +154,13 @@ const authReducer = async (authStatePromise, action) => {
                 // let i = true;
                 // setIsAuth(true);
                 //setUser(response.data.user);
+                const socket = connectSocket(response.data.user._id);
                 return {
                     ...authState,
                     isAuth: true,
                     token: response.data.accessToken,
                     user: response.data.user,
-                    socket: "",
+                    socket,
                 };
             } catch (error) {
                 return {
@@ -173,7 +175,7 @@ const authReducer = async (authStatePromise, action) => {
                 Cookies.remove("refreshToken");
                 localStorage.removeItem("token");
                 //localStorage.clear();
-                // disconnectFromSocket();
+                disconnectFromSocket();
                 return {
                     ...authState,
                     isAuth: false,
@@ -200,7 +202,6 @@ const authReducer = async (authStatePromise, action) => {
             };
         }
         case "deleteError": {
-           
             return {
                 ...authState,
                 error: null,

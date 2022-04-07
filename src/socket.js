@@ -34,4 +34,5 @@ export const sendMessage = (message, recipientID) => {
 
 export const disconnectFromSocket = () => {
     socket && socket.disconnect();
+    console.log("diskonect");
 };

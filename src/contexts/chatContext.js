@@ -6,6 +6,7 @@ import styled, { keyframes } from "styled-components";
 import Draggable from "react-draggable";
 import { Chat } from "../components/Chat";
 import useMediaQuery from "../helpers/useMediaQuery";
+import { NotificationsContext } from "./notifyContext";
 
 const ChatContext = createContext();
 
@@ -13,6 +14,7 @@ const ChatProvider = ({ children }) => {
     const [activeChats, setActiveChats] = useState([]);
     const [conversations, setConversations] = useState([]);
     const { authState } = useContext(AuthContext);
+    const { Open } = useContext(NotificationsContext);
     const matches = useMediaQuery("(max-width: 890px)");
 
     async function refreshConversations() {
@@ -26,6 +28,12 @@ const ChatProvider = ({ children }) => {
 
         return () => {};
     }, []);
+
+    authState.socket &&
+        authState.socket.on("recieveMessage", (message) => {
+            activeChats.length == 0 && Open(`New message :${message}`);
+            refreshConversations();
+        });
 
     const stopScroll = () => {
         document.body.classList.add("stopScroll");

@@ -69,7 +69,7 @@ const ChatContent = styled.div`
     overflow-x: hidden;
 
     @media screen and (max-width: 890px) {
-       //height: 80vh;
+        //height: 80vh;
         flex-grow: 1;
         max-width: 100%;
     }
@@ -138,10 +138,10 @@ export const Chat = ({ notMe, toggleChat, chat }) => {
     const messagesEndRef = useRef(null);
     const matches = useMediaQuery("(max-width: 890px)");
 
-    useEffect(() => {
-        console.log(matches);
-        return () => {};
-    }, [matches]);
+    // useEffect(() => {
+    //     console.log(matches);
+    //     return () => {};
+    // }, [matches]);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -162,6 +162,8 @@ export const Chat = ({ notMe, toggleChat, chat }) => {
         refreshConversations();
         setMessages([...messages, res.data]);
         Open("Message send");
+        authState.socket &&
+            authState.socket.emit("message", newMessageText, id);
         setNewMessageText("");
     }
 
@@ -203,10 +205,7 @@ export const Chat = ({ notMe, toggleChat, chat }) => {
                             onClick={() => {
                                 toggleChat(chat._id);
                             }}
-                           
                         />
-                       
-                        
                         {notMe.firstName} {notMe.familyName}
                     </ChatHeader>
                     <ChatContent>

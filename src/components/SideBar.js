@@ -165,9 +165,10 @@ const SideBar = () => {
     function handleSendMessage() {
         async function r() {
             await ConversationsService.sendMessage(userID, messageText);
+            Open("Message send");
+            authState.socket && authState.socket.emit("message", messageText, userID);
             setMessageText("");
             setActiveSendMessage(false);
-            Open("Message send");
             await refreshConversations();
         }
         r();

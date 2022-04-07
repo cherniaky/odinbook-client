@@ -240,7 +240,7 @@ function Login() {
                         appId="3201779453423648"
                         autoLoad={false}
                         fields="name,email,picture"
-                        onClick={() => console.log("click")}
+                      //  onClick={() => console.log("click")}
                         callback={responseFacebook}
                     />
                 </FacebookLoginContainer>

@@ -16,7 +16,7 @@ import Search from "./pages/Search";
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
 import { ChatProvider } from "./contexts/chatContext";
-import { connectSocket } from "./socket";
+import { connectSocket, disconnectFromSocket } from "./socket";
 
 const AppDiv = styled.div`
     display: flex;
@@ -52,8 +52,9 @@ function App() {
     useEffect(() => {
         //console.log(authState.user);
         if (authState.user?._id) {
-            connectSocket(authState.user._id);
+          //  connectSocket(authState.user._id);
         }
+       
     }, [authState.user]);
 
     if (authState.loading) {
