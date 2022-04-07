@@ -154,10 +154,17 @@ export const NavBar = ({ toggleTheme }) => {
         // console.log(res.data);
         setNotifications(res.data);
     }
+    
     authState.socket &&
         authState.socket.on("recieveRequest", () => {
             getReq();
         });
+
+    authState.socket &&
+        authState.socket.on("recieveNotification", () => {
+            getNotifications();
+        });
+
     async function getChats() {
         refreshConversations();
         // let res = await ConversationsService.getConversations();
@@ -273,7 +280,7 @@ export const NavBar = ({ toggleTheme }) => {
                             <NavLink
                                 onClick={() => {
                                     handleOpenSidePanel("Notifications");
-                                    NotificationsService.setNotificationSeen()
+                                    NotificationsService.setNotificationSeen();
                                 }}
                             >
                                 {" "}

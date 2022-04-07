@@ -51,6 +51,10 @@ const RequestItem = styled.li`
 const NotifyItem = styled(RequestItem)`
     background-color: ${(props) => (props.seen ? "" : props.theme.secondaryBg)};
     padding: 10px;
+    & a{
+        margin-right: 5px;
+    }
+    justify-content: center;
     margin-top: 5px;
     min-width: fit-content;
     border-radius: 5px;

@@ -265,6 +265,7 @@ const Post = ({ post, handleDeletePost }) => {
                             "liked your post",
                             _id
                         );
+                        authState.socket.emit("notification", recipient);
                         //console.log(postLikes);
                         return;
                     }}
@@ -490,6 +491,7 @@ const Post = ({ post, handleDeletePost }) => {
                             "add comment to your post",
                             _id
                         );
+                        authState.socket.emit("notification", recipient);
                         setComment("");
                         Open("Comment added");
                         //console.log(res.data);
