@@ -7,6 +7,7 @@ import PostsService from "../services/PostsService";
 import { formatDistance } from "date-fns";
 import makeDateAgo from "../helpers/makeDateAgo";
 import { NotificationsContext } from "../contexts/notifyContext";
+import NotificationsService from "../services/NotificationsService";
 
 const Card = styled.div`
     background-color: ${(props) => props.theme.cardBg};
@@ -258,7 +259,12 @@ const Post = ({ post, handleDeletePost }) => {
                             { user: authState.user._id },
                         ]);
                         await PostsService.likePost(_id);
-
+                        //console.log(recipient);
+                        await NotificationsService.postNotification(
+                            recipient,
+                            "liked your post",
+                            _id
+                        );
                         //console.log(postLikes);
                         return;
                     }}
@@ -477,6 +483,12 @@ const Post = ({ post, handleDeletePost }) => {
                         let res = await PostsService.makePostComment(
                             _id,
                             comment
+                        );
+                        //console.log(recipient);
+                        await NotificationsService.postNotification(
+                            recipient,
+                            "add comment to your post",
+                            _id
                         );
                         setComment("");
                         Open("Comment added");

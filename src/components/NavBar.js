@@ -6,12 +6,14 @@ import { AuthContext } from "../contexts/authContext";
 import { MobileNav } from "./MobileNav";
 import SidePanel from "./SidePanel";
 import RequestsService from "../services/RequestsService";
+import NotificationsService from "../services/NotificationsService";
 import Badge from "@mui/material/Badge";
 import GroupIcon from "@mui/icons-material/Group";
 import { red } from "@mui/material/colors";
 import ConversationsService from "../services/ConversationsService";
 import { ChatContext } from "../contexts/chatContext";
 import EmailIcon from "@mui/icons-material/Email";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 
 const NavBarContainer = styled.div`
     min-height: 60px;
@@ -139,6 +141,7 @@ export const NavBar = ({ toggleTheme }) => {
     const [activeSidePannel, setActiveSidePannel] = useState(false);
     const [sidePannelContent, setSidePannelContent] = useState("");
     const [requests, setRequests] = useState([]);
+    const [notifications, setNotifications] = useState([]);
     const [chats, setChats] = useState([]);
 
     async function getReq() {
@@ -146,6 +149,15 @@ export const NavBar = ({ toggleTheme }) => {
         // console.log(res.data);
         setRequests(res.data);
     }
+    async function getNotifications() {
+        let res = await NotificationsService.getNotifications();
+        // console.log(res.data);
+        setNotifications(res.data);
+    }
+    authState.socket &&
+        authState.socket.on("recieveRequest", () => {
+            getReq();
+        });
     async function getChats() {
         refreshConversations();
         // let res = await ConversationsService.getConversations();
@@ -159,7 +171,7 @@ export const NavBar = ({ toggleTheme }) => {
     // }, [chats]);
 
     useEffect(() => {
-       // console.log(conversations); 
+        // console.log(conversations);
         setChats(conversations);
         return () => {};
     }, [conversations]);
@@ -167,7 +179,8 @@ export const NavBar = ({ toggleTheme }) => {
     useEffect(() => {
         getReq();
         getChats();
-    }, []);
+        getNotifications();
+    }, [authState.user]);
 
     function toggleSidePannel() {
         setActiveSidePannel(() => !activeSidePannel);
@@ -187,13 +200,13 @@ export const NavBar = ({ toggleTheme }) => {
         setSearchValue("");
         // <Navigate to={`${ROUTES.SEARCH}?user=${text}`} />;
     };
-    const handleOpenSidePanel = (text) =>{
-         if (sidePannelContent == text || !activeSidePannel) {
-             getChats();
-             toggleSidePannel();
-         }
-         setSidePannelContent(text);
-    }
+    const handleOpenSidePanel = (text) => {
+        if (sidePannelContent == text || !activeSidePannel) {
+            getChats();
+            toggleSidePannel();
+        }
+        setSidePannelContent(text);
+    };
     return (
         <>
             <NavBarContainer>
@@ -260,9 +273,19 @@ export const NavBar = ({ toggleTheme }) => {
                             <NavLink
                                 onClick={() => {
                                     handleOpenSidePanel("Notifications");
+                                    NotificationsService.setNotificationSeen()
                                 }}
                             >
-                                <i className="fas fa-bell"></i>
+                                {" "}
+                                <Badge
+                                    badgeContent={
+                                        notifications.filter((not) => !not.seen)
+                                            .length
+                                    }
+                                    color="error"
+                                >
+                                    <NotificationsIcon />
+                                </Badge>
                             </NavLink>
                             <NavLink
                                 onClick={() => {
@@ -339,6 +362,7 @@ export const NavBar = ({ toggleTheme }) => {
                         title={sidePannelContent}
                         setRequests={setRequests}
                         chats={chats}
+                        notifications={notifications}
                     />
                 </>
             )}

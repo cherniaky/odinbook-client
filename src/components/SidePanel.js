@@ -43,8 +43,17 @@ const PanelTitle = styled.h1`
 `;
 const RequestItem = styled.li`
     display: flex;
+    width: 90%;
     align-items: center;
     justify-content: space-between;
+`;
+
+const NotifyItem = styled(RequestItem)`
+    background-color: ${(props) => (props.seen ? "" : props.theme.secondaryBg)};
+    padding: 10px;
+    margin-top: 5px;
+    min-width: fit-content;
+    border-radius: 5px;
 `;
 
 const ChatItem = styled(RequestItem)`
@@ -119,6 +128,7 @@ const SidePanel = ({
     setRequests,
     authId,
     toggleSidePannel,
+    notifications,
 }) => {
     let navigate = useNavigate();
     const { toggleChat, conversations } = useContext(ChatContext);
@@ -245,6 +255,31 @@ const SidePanel = ({
                             })
                         ) : (
                             <>No chats</>
+                        )}
+                    </ListFlex>
+                );
+            case "Notifications":
+                return (
+                    <ListFlex>
+                        {notifications.length != 0 ? (
+                            notifications.map((notification) => {
+                                return (
+                                    <NotifyItem
+                                        key={notification._id}
+                                        seen={notification.seen}
+                                    >
+                                        <Link
+                                            to={`/users/${notification.sender._id}`}
+                                        >
+                                            {"  "}
+                                            {notification.senderName}
+                                        </Link>{" "}
+                                        {notification.text}
+                                    </NotifyItem>
+                                );
+                            })
+                        ) : (
+                            <>No notifications</>
                         )}
                     </ListFlex>
                 );

@@ -160,13 +160,16 @@ const SideBar = () => {
     function handleAddFriend() {
         RequestsService.sendRequest(userID);
         setRequestSendText("Request send");
+        authState.socket &&
+            authState.socket.emit("friendRequest", { user: userID });
     }
 
     function handleSendMessage() {
         async function r() {
             await ConversationsService.sendMessage(userID, messageText);
             Open("Message send");
-            authState.socket && authState.socket.emit("message", messageText, userID);
+            authState.socket &&
+                authState.socket.emit("message", messageText, userID);
             setMessageText("");
             setActiveSendMessage(false);
             await refreshConversations();
