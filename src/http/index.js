@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const API_URL = "https://odinbook-api21.herokuapp.com/";
+export const API_URL = "https://odinbook-api21.herokuapp.com";
 //"http://localhost:3000"; 
 //"https://odinbook-api21.herokuapp.com/api";
 
