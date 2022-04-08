@@ -1,7 +1,8 @@
 import axios from "axios";
 
-export const API_URL = //"https://blogpageapi.herokuapp.com/api";
-"http://localhost:3000";
+export const API_URL = "https://odinbook-api21.herokuapp.com/";
+//"http://localhost:3000"; 
+//"https://odinbook-api21.herokuapp.com/api";
 
 const $api = axios.create({
     withCredentials: true,

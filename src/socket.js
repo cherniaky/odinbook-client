@@ -1,6 +1,6 @@
 import io from "socket.io-client";
 
-const server = "http://localhost:3500";
+const server = "https://odinbook-api21.herokuapp.com/";
     // process.env.NODE_ENV === "production"
     //     ? "https://gentle-savannah-57372.herokuapp.com/"
     //     : "http://localhost:8080";
