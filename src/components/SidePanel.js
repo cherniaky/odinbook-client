@@ -113,7 +113,7 @@ const ListFlex = styled.ul`
 
 const GetBackButton = styled.button`
     position: absolute;
-    color: white;
+    color: ${props => props.theme.mainFontColour};  
     left: 10px;
     background-color: transparent;
     cursor: pointer;

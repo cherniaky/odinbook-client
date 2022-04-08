@@ -1,14 +1,16 @@
 import io from "socket.io-client";
 
 const server = "https://odinbook-api21.herokuapp.com/";
-    // process.env.NODE_ENV === "production"
-    //     ? "https://gentle-savannah-57372.herokuapp.com/"
-    //     : "http://localhost:8080";
+// process.env.NODE_ENV === "production"
+//     ? "https://gentle-savannah-57372.herokuapp.com/"
+//     : "http://localhost:8080";
 let socket;
 
 export const connectSocket = (userID) => {
     socket = io.connect(server);
-
+    socket.on("connect", () => {
+        console.log("connetcted");
+    });
     socket && socket.emit("userID", userID);
 
     return socket;

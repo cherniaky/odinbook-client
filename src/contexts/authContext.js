@@ -20,6 +20,8 @@ const authReducer = async (authStatePromise, action) => {
                 // console.log(response);
                 Cookies.set("refreshToken", response.data.refreshToken, {
                     expires: 15,
+                    secure: true,
+                    sameSite: "None",
                 });
                 localStorage.setItem("token", response.data.accessToken);
                 const socket = connectSocket(response.data.user._id);
@@ -91,9 +93,11 @@ const authReducer = async (authStatePromise, action) => {
                     familyName
                 );
                 // console.log(response);
-                Cookies.set("refreshToken", response.data.refreshToken, {
-                    expires: 15,
-                });
+               Cookies.set("refreshToken", response.data.refreshToken, {
+                   expires: 15,
+                   secure: true,
+                   sameSite: "None",
+               });
                 localStorage.setItem("token", response.data.accessToken);
                 const socket = connectSocket(response.data.user._id);
                 return {
@@ -121,6 +125,8 @@ const authReducer = async (authStatePromise, action) => {
                 //console.log(response);
                 Cookies.set("refreshToken", response.data.refreshToken, {
                     expires: 15,
+                    secure: true,
+                    sameSite: "None",
                 });
                 localStorage.setItem("token", response.data.accessToken);
                 //  setIsAuth(true);
@@ -148,6 +154,8 @@ const authReducer = async (authStatePromise, action) => {
                 });
                 Cookies.set("refreshToken", response.data.refreshToken, {
                     expires: 15,
+                    secure: true,
+                    sameSite: "None",
                 });
                 //console.log(response.data)
                 localStorage.setItem("token", response.data.accessToken);
