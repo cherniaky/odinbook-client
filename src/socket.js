@@ -1,9 +1,8 @@
 import io from "socket.io-client";
 
 const server = "https://odinbook-api21.herokuapp.com";
-// process.env.NODE_ENV === "production"
-//     ? "https://odinbook-api21.herokuapp.com/";
-//     : "http://localhost:3000";
+// const server = "http://localhost:3000";
+
 let socket;
 
 export const connectSocket = (userID) => {

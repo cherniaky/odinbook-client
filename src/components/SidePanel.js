@@ -51,7 +51,7 @@ const RequestItem = styled.li`
 const NotifyItem = styled(RequestItem)`
     background-color: ${(props) => (props.seen ? "" : props.theme.secondaryBg)};
     padding: 10px;
-    & a{
+    & a {
         margin-right: 5px;
     }
     justify-content: center;
@@ -113,7 +113,7 @@ const ListFlex = styled.ul`
 
 const GetBackButton = styled.button`
     position: absolute;
-    color: ${props => props.theme.mainFontColour};  
+    color: ${(props) => props.theme.mainFontColour};
     left: 10px;
     background-color: transparent;
     cursor: pointer;
@@ -265,7 +265,7 @@ const SidePanel = ({
             case "Notifications":
                 return (
                     <ListFlex>
-                        {notifications.length != 0 ? (
+                        {notifications.filter((not)=>not.sender._id != authId).length != 0 ? (
                             notifications.map((notification) => {
                                 return (
                                     <NotifyItem
