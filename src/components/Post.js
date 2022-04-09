@@ -272,7 +272,7 @@ const Post = ({ post, handleDeletePost }) => {
                 >
                     <i className="fas fa-thumbs-up"></i>{" "}
                     {postLikes.some(({ user }) => user == authState.user._id)
-                        ? "You liked this post"
+                        ? "Unlike"
                         : "Like"}
                 </ActionButton>
                 <ActionButton

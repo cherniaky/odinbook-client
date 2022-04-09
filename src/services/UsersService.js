@@ -12,13 +12,21 @@ export default class UsersService {
         });
     }
 
-    static async updateProfile(location, occupation , bio) {
+    static async updateProfile(
+        location,
+        occupation,
+        bio,
+        imgUrl,
+        profilePicName
+    ) {
         return $api.put(
-            `users/current/profile`,  
+            `users/current/profile`,
             {
                 location,
                 bio,
                 occupation,
+                imgUrl,
+                profilePicName: profilePicName || "",
             },
             {
                 withCredentials: true,
