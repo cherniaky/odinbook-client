@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import Cookies from "js-cookie";
 export const API_URL = "https://odinbook-api21.herokuapp.com";
 // export const API_URL = "http://localhost:3000";
 //"http://localhost:3000";
@@ -29,9 +29,15 @@ $api.interceptors.response.use(
         ) {
             try {
                 originalReq._isRetry = true;
-                const response = await axios.get(`${API_URL}/auth/refresh`, {
-                    withCredentials: true,
-                });
+                const response = await axios.post(
+                    `${API_URL}/auth/refresh`,
+                    {
+                        refreshToken: Cookies.get("refreshToken"),
+                    },
+                    {
+                        withCredentials: true,
+                    }
+                );
                 //console.log("accessToken", response.data.accessToken);
                 localStorage.setItem("token", response.data.accessToken);
 

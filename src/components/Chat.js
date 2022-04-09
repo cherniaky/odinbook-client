@@ -31,7 +31,8 @@ const ChatContainer = styled.div`
     left: 20px;
     z-index: 21;
     @media screen and (max-width: 890px) {
-        max-width: 100vw;
+        min-width: 100vw;
+        //position: relative;
         top: 0;
 
         height: 100vh;
@@ -70,6 +71,7 @@ const ChatContent = styled.div`
 
     @media screen and (max-width: 890px) {
         //height: 80vh;
+        padding-bottom: 35px;
         flex-grow: 1;
         max-width: 100%;
     }
@@ -104,14 +106,16 @@ const MessageDate = styled.div`
 const ChatForm = styled.form`
     width: 100%;
     display: flex;
-
+    padding: 10px 5px;
+    border-top: 1px solid black;
+    background-color: ${({ theme }) => theme.cardBg};
     & input[type="text"] {
         background-color: ${({ theme }) => theme.bodyBg};
         color: ${({ theme }) => theme.mainFontColour};
         border-bottom-left-radius: 5px;
         padding: 5px;
         flex-grow: 1;
-       //max-width: 90%;
+        //max-width: 90%;
         min-width: 10%;
     }
     & input[type="submit"] {
@@ -122,6 +126,14 @@ const ChatForm = styled.form`
         color: white;
         border-bottom-right-radius: 5px;
         width: fit-content;
+    }
+    @media screen and (max-width: 890px) {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        & input[type="submit"] {
+            border-bottom-right-radius: 0;
+        }
     }
 `;
 const LoaderDiv = styled.div`
