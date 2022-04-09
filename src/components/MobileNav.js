@@ -3,6 +3,8 @@ import * as ROUTES from "../helpers/ROUTES";
 import { Link, Routes, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "../contexts/authContext";
+import EmailIcon from "@mui/icons-material/Email";
+import Badge from "@mui/material/Badge";
 
 const NavSection = styled.section`
     display: flex;
@@ -101,7 +103,8 @@ const MobileContainer = styled.div`
 
     top: ${(props) => (props.show ? "60px" : "-130vh")};
     left: 0;
-    width: 100%;
+    max-width: 100vw;
+    min-width: 10vw;
     display: flex;
     flex-direction: column;
     //justify-content: space-between;
@@ -126,6 +129,9 @@ const NavItem = styled.section`
     & i {
         margin-right: 10px;
     }
+    & svg {
+        margin-right: 10px;
+    }
     & img {
         margin-right: 10px;
     }
@@ -145,6 +151,7 @@ export const MobileNav = ({
     handleSearch,
     toggleSidePannel,
     handleOpenSidePanel,
+    chats,
 }) => {
     const { authState, dispatch } = useContext(AuthContext);
 
@@ -193,7 +200,22 @@ export const MobileNav = ({
                 }}
             >
                 {" "}
-                <i className="fas fa-envelope"></i>Messages
+                <Badge
+                    badgeContent={
+                        chats.some((chat) => {
+                            return chat.lastMessage.sender._id !==
+                                authState.user._id
+                                ? !chat.lastMessage.seen
+                                : false;
+                        })
+                            ? "New"
+                            : 0
+                    }
+                    color="error"
+                >
+                    <EmailIcon />
+                </Badge>
+                Messages
             </NavItem>
             <NavItem
                 onClick={() => {

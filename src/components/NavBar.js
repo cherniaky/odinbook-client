@@ -154,7 +154,7 @@ export const NavBar = ({ toggleTheme }) => {
         // console.log(res.data);
         setNotifications(res.data);
     }
-    
+
     authState.socket &&
         authState.socket.on("recieveRequest", () => {
             getReq();
@@ -286,8 +286,13 @@ export const NavBar = ({ toggleTheme }) => {
                                 {" "}
                                 <Badge
                                     badgeContent={
-                                        notifications.filter((not) => !not.seen)
-                                            .length
+                                        notifications
+                                            .filter(
+                                                (not) =>
+                                                    not.sender._id !=
+                                                    authState.user._id
+                                            )
+                                            .filter((not) => !not.seen).length
                                     }
                                     color="error"
                                 >
@@ -357,6 +362,7 @@ export const NavBar = ({ toggleTheme }) => {
                         handleOpenSidePanel={handleOpenSidePanel}
                         show={showMobileMenu}
                         toggleMobile={toggleMobile}
+                        chats={chats}
                         searchValue={searchValue}
                         setSearchValue={setSearchValue}
                         handleSearch={handleSearch}

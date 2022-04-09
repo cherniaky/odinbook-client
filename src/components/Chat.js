@@ -31,7 +31,7 @@ const ChatContainer = styled.div`
     left: 20px;
     z-index: 21;
     @media screen and (max-width: 890px) {
-        width: 100%;
+        max-width: 100vw;
         top: 0;
 
         height: 100vh;
@@ -104,7 +104,6 @@ const MessageDate = styled.div`
 const ChatForm = styled.form`
     width: 100%;
     display: flex;
-    flex-grow: 0;
 
     & input[type="text"] {
         background-color: ${({ theme }) => theme.bodyBg};
@@ -112,10 +111,13 @@ const ChatForm = styled.form`
         border-bottom-left-radius: 5px;
         padding: 5px;
         flex-grow: 1;
+       //max-width: 90%;
+        min-width: 10%;
     }
     & input[type="submit"] {
         cursor: pointer;
         padding: 0 9px;
+        flex-grow: 0;
         background-color: ${({ theme }) => theme.buttonColour};
         color: white;
         border-bottom-right-radius: 5px;
