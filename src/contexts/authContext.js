@@ -20,8 +20,8 @@ const authReducer = async (authStatePromise, action) => {
                 // console.log(response);
                 Cookies.set("refreshToken", response.data.refreshToken, {
                     expires: 15,
-                    secure: true,
-                    sameSite: "None",
+                    Secure: true,
+                    sameSite: "none",
                 });
                 localStorage.setItem("token", response.data.accessToken);
                 const socket = connectSocket(response.data.user._id);
@@ -61,6 +61,8 @@ const authReducer = async (authStatePromise, action) => {
                 // console.log(response);
                 // Cookies.set("refreshToken", response.data.refreshToken, {
                 //     expires: 15,
+                //Secure:true,
+                //sameSite:"none",
                 // });
                 // localStorage.setItem("token", response.data.accessToken);
 
@@ -93,11 +95,11 @@ const authReducer = async (authStatePromise, action) => {
                     familyName
                 );
                 // console.log(response);
-               Cookies.set("refreshToken", response.data.refreshToken, {
-                   expires: 15,
-                   secure: true,
-                   sameSite: "None",
-               });
+                Cookies.set("refreshToken", response.data.refreshToken, {
+                    expires: 15,
+                    Secure: true,
+                    sameSite: "none",
+                });
                 localStorage.setItem("token", response.data.accessToken);
                 const socket = connectSocket(response.data.user._id);
                 return {
@@ -125,8 +127,8 @@ const authReducer = async (authStatePromise, action) => {
                 //console.log(response);
                 Cookies.set("refreshToken", response.data.refreshToken, {
                     expires: 15,
-                    secure: true,
-                    sameSite: "None",
+                    Secure: true,
+                    sameSite: "none",
                 });
                 localStorage.setItem("token", response.data.accessToken);
                 //  setIsAuth(true);
@@ -149,13 +151,13 @@ const authReducer = async (authStatePromise, action) => {
         }
         case "checkAuth": {
             try {
-                const response = await axios.get(`${API_URL}/auth/refresh`, {
-                    withCredentials: true,
-                });
+                const response = await AuthService.refresh(Cookies.get("refreshToken"));
+                // const response = await axios.get(`${API_URL}/auth/refresh`, {
+                //   //  headers:{"cookie":`refreshToken=${Cookies.get("refreshToken")};`},
+                //     withCredentials:true,
+                // });
                 Cookies.set("refreshToken", response.data.refreshToken, {
                     expires: 15,
-                    secure: true,
-                    sameSite: "None",
                 });
                 //console.log(response.data)
                 localStorage.setItem("token", response.data.accessToken);

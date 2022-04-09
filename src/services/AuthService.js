@@ -10,10 +10,10 @@ export default class AuthService {
             }
         );
     }
-    static async signUp(email, firstName, familyName, password ,password2) {
+    static async signUp(email, firstName, familyName, password, password2) {
         return $api.post(
             "auth/sign-up",
-            { email, firstName, familyName, password ,password2 },
+            { email, firstName, familyName, password, password2 },
             {
                 withCredentials: true,
             }
@@ -46,5 +46,10 @@ export default class AuthService {
 
     static async logout() {
         return $api.get("auth/logout");
+    }
+    static async refresh(refreshToken) {
+        return $api.post("auth/refresh", {
+            refreshToken,
+        });
     }
 }
