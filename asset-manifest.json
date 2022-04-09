@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/odinbook-client/static/css/main.dc30b0c6.css",
-    "main.js": "/odinbook-client/static/js/main.7c0e431b.js",
+    "main.js": "/odinbook-client/static/js/main.7e9f9fb2.js",
     "static/media/fontawesome-webfont.svg?v=4.7.0": "/odinbook-client/static/media/fontawesome-webfont.c1e38fd9e0e74ba58f7a.svg",
     "static/media/fontawesome-webfont.eot": "/odinbook-client/static/media/fontawesome-webfont.8b43027f47b20503057d.eot",
     "static/media/fontawesome-webfont.ttf?v=4.7.0": "/odinbook-client/static/media/fontawesome-webfont.1e59d2330b4c6deb84b3.ttf",
@@ -9,10 +9,10 @@
     "static/media/fontawesome-webfont.woff2?v=4.7.0": "/odinbook-client/static/media/fontawesome-webfont.20fd1704ea223900efa9.woff2",
     "index.html": "/odinbook-client/index.html",
     "main.dc30b0c6.css.map": "/odinbook-client/static/css/main.dc30b0c6.css.map",
-    "main.7c0e431b.js.map": "/odinbook-client/static/js/main.7c0e431b.js.map"
+    "main.7e9f9fb2.js.map": "/odinbook-client/static/js/main.7e9f9fb2.js.map"
   },
   "entrypoints": [
     "static/css/main.dc30b0c6.css",
-    "static/js/main.7c0e431b.js"
+    "static/js/main.7e9f9fb2.js"
   ]
 }
