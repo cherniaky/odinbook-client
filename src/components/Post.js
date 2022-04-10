@@ -8,6 +8,7 @@ import { formatDistance } from "date-fns";
 import makeDateAgo from "../helpers/makeDateAgo";
 import { NotificationsContext } from "../contexts/notifyContext";
 import NotificationsService from "../services/NotificationsService";
+import { deletePostImg } from "../services/firebase";
 
 const Card = styled.div`
     background-color: ${(props) => props.theme.cardBg};
@@ -159,7 +160,12 @@ const ShowComments = styled.button`
     padding: 4px;
     margin: 10px 0 0;
 `;
-
+const ContentImg = styled.img`
+    width: 100%;
+    height: auto;
+    margin-bottom: 5px;
+    border-radius: 5px;
+`;
 const Post = ({ post, handleDeletePost }) => {
     let {
         date,
@@ -212,7 +218,10 @@ const Post = ({ post, handleDeletePost }) => {
                 </PostUserInfo>
                 {user._id == authState.user._id ? (
                     <i
-                        onClick={() => {
+                        onClick={async () => {
+                            if (post.imgName) {
+                               await deletePostImg(post.imgName);
+                            }
                             handleDeletePost(_id);
                         }}
                         className="fa-solid fa-trash"
@@ -221,7 +230,10 @@ const Post = ({ post, handleDeletePost }) => {
                     <></>
                 )}
             </PostUserContainer>
-            <CommentText>{text}</CommentText>
+            <CommentText>
+                <ContentImg src={post.img} />
+                {text}
+            </CommentText>
             <PostUserContainerSpaceBettwen>
                 <div>
                     {postLikes.length}{" "}

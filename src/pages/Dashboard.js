@@ -7,6 +7,8 @@ import PostsService from "../services/PostsService";
 import Post from "../components/Post";
 import { NotificationsContext } from "../contexts/notifyContext";
 import { ClipLoader } from "react-spinners";
+import { uploadImage } from "../services/firebase";
+import ImageIcon from "@mui/icons-material/Image";
 
 const DashboardContainer = styled.div`
     width: 55%;
@@ -96,12 +98,39 @@ const LoaderDiv = styled.div`
     align-items: center;
     justify-content: center;
 `;
+const Input = styled.input`
+    background-color: ${(props) => props.theme.bodyBg};
+    border: 1px solid ${(props) => props.theme.borderColour};
+    padding: 6px;
+    margin: 5px 0 10px 0;
+    color: ${({ theme }) => theme.mainFontColour};
+    width: 100%;
+`;
+
+const ImgInput = styled(Input)`
+    display: none;
+`;
+const Imglabel = styled.label`
+    background-color: ${({ theme }) => theme.bodyBg};
+    border: 1px solid #0c0c0c;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    margin: 5px 0 10px 0;
+    color: #e5e3e3;
+    cursor: pointer;
+    width: 100%;
+`;
+
 const Dashboard = () => {
     const [showPostForm, setShowPostForm] = useState(false);
     const [PostValue, setPostValue] = useState("");
     const [posts, setPosts] = useState([]);
     const { Open } = useContext(NotificationsContext);
     const [loading, setLoading] = useState(false);
+    const [imageFile, setImageFile] = useState(null);
 
     function togglePostForm() {
         return setShowPostForm(!showPostForm);
@@ -146,6 +175,19 @@ const Dashboard = () => {
 
             <OverflowHidden show={showPostForm}>
                 <PostForm show={showPostForm}>
+                    <Imglabel htmlFor="profileImg">
+                        {imageFile?.name || (
+                            <>
+                                <ImageIcon /> Add an image
+                            </>
+                        )}
+                    </Imglabel>
+                    <ImgInput
+                        onChange={(e) => setImageFile(e.target.files[0])}
+                        accept="image/png, image/jpeg"
+                        type="file"
+                        id="profileImg"
+                    />
                     <PostTextArea
                         onChange={(e) => {
                             setPostValue(e.target.value);
@@ -155,8 +197,19 @@ const Dashboard = () => {
                         placeholder="What's on your mind?"
                     />
                     <PostSubmit
+                        disabled={!PostValue || loading}
                         onClick={async () => {
-                            let res = await PostsService.makePost(PostValue);
+                            setLoading(true);
+                            let imgSrc;
+                            if (imageFile) {
+                                let res = await uploadImage(imageFile);
+                                imgSrc = res.imageSrc;
+                            }
+                            let res = await PostsService.makePost(
+                                PostValue,
+                                imgSrc,
+                                imageFile?.name
+                            );
                             //console.log(res.data);
                             // let data = await res.json();
                             // console.log(data);
@@ -168,9 +221,11 @@ const Dashboard = () => {
                             ];
                             //console.log(arr);
                             setPosts(arr);
+                            setLoading(false);
+                            setShowPostForm(false);
                         }}
                     >
-                        Post
+                        {loading ? "Please wait..." : "Post"}
                     </PostSubmit>
                 </PostForm>
             </OverflowHidden>

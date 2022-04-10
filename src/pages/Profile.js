@@ -9,6 +9,8 @@ import SideBar from "../components/SideBar";
 import UsersService from "../services/UsersService";
 import { NotificationsContext } from "../contexts/notifyContext";
 import { ClipLoader } from "react-spinners";
+import { uploadImage } from "../services/firebase";
+import ImageIcon from "@mui/icons-material/Image";
 
 const ProfileContainer = styled.div`
     width: 90%;
@@ -122,8 +124,34 @@ const LoaderDiv = styled.div`
     align-items: center;
     justify-content: center;
 `;
+
+const Input = styled.input`
+    background-color: ${(props) => props.theme.bodyBg};
+    border: 1px solid ${(props) => props.theme.borderColour};
+    padding: 6px;
+    margin: 5px 0 10px 0;
+    color: ${({ theme }) => theme.mainFontColour};
+    width: 100%;
+`;
+
+const ImgInput = styled(Input)`
+    display: none;
+`;
+const Imglabel = styled.label`
+    background-color: ${({ theme }) => theme.bodyBg};
+    border: 1px solid #0c0c0c;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    margin: 5px 0 10px 0;
+    color: #e5e3e3;
+    cursor: pointer;
+    width: 100%;
+`;
+
 const Profile = () => {
-    
     const { userID } = useParams();
     const [showPostForm, setShowPostForm] = useState(false);
     const [user, setUser] = useState({});
@@ -131,7 +159,8 @@ const Profile = () => {
     const { Open } = useContext(NotificationsContext);
     const [PostValue, setPostValue] = useState("");
     const [posts, setPosts] = useState([]);
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
+    const [imageFile, setImageFile] = useState(null);
 
     function togglePostForm() {
         return setShowPostForm(!showPostForm);
@@ -139,10 +168,10 @@ const Profile = () => {
 
     useEffect(() => {
         async function getPosts() {
-            setLoading(true)
+            setLoading(true);
             let response = await PostsService.getPostsReciever(userID);
             setPosts(response.data);
-            setLoading(false)
+            setLoading(false);
         }
         getPosts();
         async function getUser() {
@@ -193,6 +222,19 @@ const Profile = () => {
                 )}
                 <OverflowHidden show={showPostForm}>
                     <PostForm show={showPostForm}>
+                        <Imglabel htmlFor="profileImg">
+                            {imageFile?.name || (
+                                <>
+                                    <ImageIcon /> Add an image
+                                </>
+                            )}
+                        </Imglabel>
+                        <ImgInput
+                            onChange={(e) => setImageFile(e.target.files[0])}
+                            accept="image/png, image/jpeg"
+                            type="file"
+                            id="profileImg"
+                        />
                         <PostTextArea
                             onChange={(e) => {
                                 setPostValue(e.target.value);
@@ -202,10 +244,19 @@ const Profile = () => {
                             placeholder="What's on your mind?"
                         />
                         <PostSubmit
+                            disabled={!PostValue || loading}
                             onClick={async () => {
+                                setLoading(true);
+                                let imgSrc;
+                                if (imageFile) {
+                                    let res = await uploadImage(imageFile);
+                                    imgSrc = res.imageSrc;
+                                }
                                 let res = await PostsService.makePostOnWall(
                                     PostValue,
-                                    userID
+                                    userID,
+                                    imgSrc,
+                                    imageFile?.name
                                 );
                                 //console.log(res.data);
                                 // let data = await res.json();
@@ -221,9 +272,11 @@ const Profile = () => {
                                 ];
                                 //console.log(arr);
                                 setPosts(arr);
+                                setLoading(false);
+                                setShowPostForm(false);
                             }}
                         >
-                            Post
+                            {loading ? "Please wait..." : "Post"}
                         </PostSubmit>
                     </PostForm>
                 </OverflowHidden>

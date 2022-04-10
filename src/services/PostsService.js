@@ -19,22 +19,26 @@ export default class PostsService {
             }
         );
     }
-    static async makePost(text) {
+    static async makePost(text, imgUrl, imgName) {
         return $api.post(
             "posts",
             {
                 text,
+                imgUrl,
+                imgName,
             },
             {
                 withCredentials: true,
             }
         );
     }
-    static async makePostOnWall(text, recipientId) {
+    static async makePostOnWall(text, recipientId, imgUrl, imgName) {
         return $api.post(
             `posts/users/${recipientId}`,
             {
                 text,
+                imgUrl,
+                imgName,
             },
             {
                 withCredentials: true,

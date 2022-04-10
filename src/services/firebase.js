@@ -23,7 +23,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-export async function uploadImage(file, postId) {
+export async function uploadImage(file) {
     try {
         // 1 - We add a message with a loading icon that will get updated with the shared image.
         // const photoRef = await addDoc(collection(getFirestore(), "photos"), {
@@ -37,7 +37,7 @@ export async function uploadImage(file, postId) {
         // });
 
         // 2 - Upload the image to Cloud Storage.
-        const filePath = `/posts/${postId}/${file.name}`;
+        const filePath = `/posts/${file.name}`;
         const newImageRef = ref(getStorage(), filePath);
         const fileSnapshot = await uploadBytesResumable(newImageRef, file);
 
@@ -57,19 +57,23 @@ export async function uploadImage(file, postId) {
         );
     }
 }
+export async function deletePostImg(name) {
+    try {
+        // 2 - Upload the image to Cloud Storage.
+        const filePath = `/posts/${name}`;
+        const newImageRef = ref(getStorage(), filePath);
+        //    //const delfilePath = `/users/${user._id}/${user.profilePicName}`;
+        //    const delImageRef = ref(getStorage(), delfilePath);
+        await deleteObject(newImageRef);
+    } catch (error) {
+        console.error(
+            "There was an error uploading a file to Cloud Storage:",
+            error
+        );
+    }
+}
 export async function uploadProfileImage(file, user) {
     try {
-        // 1 - We add a message with a loading icon that will get updated with the shared image.
-        // const photoRef = await addDoc(collection(getFirestore(), "photos"), {
-        //     caption: caption,
-        //     comments: [],
-        //     dateCreated: Date.now(),
-        //     imageSrc: "",
-        //     likes: [],
-        //     //  photoId : `${userId}${Date.now()}`,
-        //     userId: userId,
-        // });
-        // console.log(user);
         if (user.profilePicName && file.name != user.profilePicName) {
             const delfilePath = `/users/${user._id}/${user.profilePicName}`;
             const delImageRef = ref(getStorage(), delfilePath);
