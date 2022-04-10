@@ -1,4 +1,4 @@
 # Odinbook - Client
-Api:https://github.com/CherniakYura/odinbook-api 
+Api: https://github.com/CherniakYura/odinbook_api
 <hr/>
-https://cherniakyura.github.io/odinbook-client/
+View website: https://cherniakyura.github.io/odinbook-client/
