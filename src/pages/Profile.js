@@ -139,14 +139,15 @@ const ImgInput = styled(Input)`
 `;
 const Imglabel = styled.label`
     background-color: ${({ theme }) => theme.bodyBg};
-    border: 1px solid #0c0c0c;
+    border: 1px solid ${({ theme }) => theme.borderColour};
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 5px;
     padding: 6px;
     margin: 5px 0 10px 0;
-    color: #e5e3e3;
+    color: ${({ theme }) => theme.mainFontColour};
     cursor: pointer;
     width: 100%;
 `;
