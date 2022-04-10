@@ -71,7 +71,7 @@ const ChatContent = styled.div`
 
     @media screen and (max-width: 890px) {
         //height: 80vh;
-        padding-bottom: 35px;
+        padding-bottom: 60px;
         flex-grow: 1;
         max-width: 100%;
     }
@@ -87,7 +87,7 @@ const Message = styled.div`
 
     background-color: ${({ theme }) => theme.bodyBg};
     width: fit-content;
-    max-width: 70%;
+    max-width: 300px;
     margin-bottom: 10px;
 `;
 const MyMessage = styled(Message)`
@@ -129,6 +129,7 @@ const ChatForm = styled.form`
     }
     @media screen and (max-width: 890px) {
         position: absolute;
+        padding-bottom: 30px;
         width: 100%;
         bottom: 0;
         & input[type="submit"] {

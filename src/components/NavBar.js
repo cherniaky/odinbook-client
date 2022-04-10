@@ -47,6 +47,8 @@ const TitleSection = styled.section`
 const Title = styled.h1`
     font-size: 32px;
     text-shadow: ${(props) => props.theme.mainTitleGlow};
+    cursor: pointer;
+    padding: 10px 10px;
 `;
 
 const ToggleButton = styled.span`
@@ -218,9 +220,15 @@ export const NavBar = ({ toggleTheme }) => {
         <>
             <NavBarContainer>
                 <TitleSection>
-                    <Title>
-                        <Link to={ROUTES.DASHBOARD}>Odinbook</Link>
+                    {/* <Link to={ROUTES.DASHBOARD}> */}
+                    <Title
+                        onClick={() => {
+                            navigate(ROUTES.DASHBOARD);
+                        }}
+                    >
+                        Odinbook
                     </Title>
+                    {/* </Link> */}
                     <ToggleButton
                         onClick={() => {
                             toggleTheme();

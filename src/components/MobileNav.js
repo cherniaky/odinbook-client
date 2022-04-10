@@ -97,14 +97,14 @@ const BarsSection = styled.section`
 `;
 
 const MobileContainer = styled.div`
-    min-height: calc(100vh);
+    min-height: 100vh;
     background-color: ${({ theme }) => theme.headerColour};
     position: absolute;
 
     top: ${(props) => (props.show ? "60px" : "-130vh")};
     left: 0;
-    max-width: 100vw;
-    min-width: 10vw;
+    width: 100%;
+    min-width: 10%;
     display: flex;
     flex-direction: column;
     //justify-content: space-between;
