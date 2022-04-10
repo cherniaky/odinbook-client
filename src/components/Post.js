@@ -136,7 +136,7 @@ const CommentText = styled.div`
     white-space: pre-wrap;
     word-wrap: break-word;
     max-width: 100%;
-    margin: 5px 0;
+    margin: 10px 0;
     height: fit-content;
 `;
 
@@ -220,7 +220,7 @@ const Post = ({ post, handleDeletePost }) => {
                     <i
                         onClick={async () => {
                             if (post.imgName) {
-                               await deletePostImg(post.imgName);
+                                await deletePostImg(post.imgName);
                             }
                             handleDeletePost(_id);
                         }}
@@ -231,7 +231,7 @@ const Post = ({ post, handleDeletePost }) => {
                 )}
             </PostUserContainer>
             <CommentText>
-                <ContentImg src={post.img} />
+                {post.img && <ContentImg src={post.img} />}
                 {text}
             </CommentText>
             <PostUserContainerSpaceBettwen>
