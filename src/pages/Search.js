@@ -25,10 +25,7 @@ const ResultItem = styled.li`
     }
     display: flex;
     align-items: center;
-    & img {
-        border-radius: 50%;
-        margin-right: 20px;
-    }
+
     & i {
         font-size: 50px;
         margin-right: 20px;
@@ -40,6 +37,12 @@ const Empty = styled.section`
     margin-top: 40px;
     display: flex;
     font-size: 30px;
+`;
+
+const ResultImage = styled.img`
+    width: 50px;
+    border-radius: 50%;
+    margin-right: 20px;
 `;
 
 const Search = () => {
@@ -89,7 +92,7 @@ const Search = () => {
                         <ResultItem>
                             {" "}
                             {user.profilePic ? (
-                                <img src={user.profilePic} />
+                                <ResultImage src={user.profilePic} />
                             ) : (
                                 <i className="fa-regular fa-circle-user"></i>
                             )}
