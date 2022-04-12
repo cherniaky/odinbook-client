@@ -9,6 +9,8 @@ import makeDateAgo from "../helpers/makeDateAgo";
 import { NotificationsContext } from "../contexts/notifyContext";
 import NotificationsService from "../services/NotificationsService";
 import { deletePostImg } from "../services/firebase";
+import Modal from "@mui/material/Modal";
+import { Box } from "@mui/material";
 
 const Card = styled.div`
     background-color: ${(props) => props.theme.cardBg};
@@ -161,11 +163,30 @@ const ShowComments = styled.button`
     margin: 10px 0 0;
 `;
 const ContentImg = styled.img`
+    cursor: pointer;
     width: 100%;
-    height: auto;
+    height: 100%;
+    max-height: 80vh;
     margin-bottom: 5px;
     border-radius: 5px;
 `;
+
+const ModalStyle = {
+    position: "absolute",
+    borderRadius: "5px",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    maxWidth: "90%",
+    height: "fit-content",
+    width: "fit-content",
+    maxHeight: "80vh",
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 0,
+};
+
 const Post = ({ post, handleDeletePost }) => {
     let {
         date,
@@ -182,11 +203,20 @@ const Post = ({ post, handleDeletePost }) => {
     const [postComments, setPostComments] = useState(comments);
     const [comment, setComment] = useState("");
     const [showComments, setShowComments] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
     //  console.log(postLikes);
     //  console.log(postCom);
     const { authState, dispatch } = useContext(AuthContext);
     const { Open } = useContext(NotificationsContext);
     const inputref = useRef(null);
+
+    function OpenModal() {
+        setModalOpen(true);
+    }
+
+    function CloseModal() {
+        setModalOpen(false);
+    }
 
     return (
         <Card>
@@ -231,7 +261,25 @@ const Post = ({ post, handleDeletePost }) => {
                 )}
             </PostUserContainer>
             <CommentText>
-                {post.img && <ContentImg src={post.img} />}
+                {post.img && (
+                    <ContentImg
+                        onClick={() => {
+                            OpenModal();
+                        }}
+                        src={post.img}
+                    />
+                )}
+                <Modal
+                    open={modalOpen}
+                    onClose={CloseModal}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={ModalStyle}>
+                        {" "}
+                        <ContentImg src={post.img} />
+                    </Box>
+                </Modal>
                 {text}
             </CommentText>
             <PostUserContainerSpaceBettwen>

@@ -55,7 +55,8 @@ const NotifyItem = styled(RequestItem)`
         margin-right: 5px;
     }
     justify-content: center;
-    margin-top: 5px;
+    margin-top: 10px;
+    border-bottom: 1px solid ${({ theme }) => theme.borderColour};
     min-width: fit-content;
     border-radius: 5px;
 `;
