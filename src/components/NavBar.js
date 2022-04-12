@@ -212,15 +212,15 @@ export const NavBar = ({ toggleTheme }) => {
 
     const toggleScroll = () => {
         document.body.classList.toggle("stopScroll");
-        console.log("scroll");
+       // console.log("scroll");
     };
     const stopScroll = () => {
         document.body.classList.add("stopScroll");
-        console.log("stop scroll");
+        //console.log("stop scroll");
     };
     const startScroll = () => {
         document.body.classList.remove("stopScroll");
-        console.log(" start scroll");
+       // console.log(" start scroll");
     };
 
     const toggleMobile = () => {
