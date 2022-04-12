@@ -41,6 +41,7 @@ const Empty = styled.section`
 
 const ResultImage = styled.img`
     width: 50px;
+    height: 50px;
     border-radius: 50%;
     margin-right: 20px;
 `;
@@ -102,10 +103,25 @@ const Search = () => {
                 );
             })}
             {fuse.search(userValue).length == 0 ? (
-                <Empty>
-                    <i className="fa-solid fa-magnifying-glass"></i>Didn't find
-                    any user
-                </Empty>
+                // <Empty>
+                //     <i className="fa-solid fa-magnifying-glass"></i>Didn't find
+                //     any user
+                // </Empty>
+                users.map((user) => {
+                    return (
+                        <Link key={user._id} to={`/users/${user._id}`}>
+                            <ResultItem>
+                                {" "}
+                                {user.profilePic ? (
+                                    <ResultImage src={user.profilePic} />
+                                ) : (
+                                    <i className="fa-regular fa-circle-user"></i>
+                                )}
+                                {user.firstName + " " + user.familyName}
+                            </ResultItem>
+                        </Link>
+                    );
+                })
             ) : (
                 <></>
             )}

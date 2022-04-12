@@ -129,7 +129,13 @@ const GridItem = styled.div`
         width: 70px;
     }
     display: flex;
+    margin: 5px;
     flex-direction: column;
+`;
+
+const ProfileImgFriend = styled.img`
+  width: 70px;
+  height: 70px;
 `;
 
 const SideBar = () => {
@@ -314,7 +320,9 @@ const SideBar = () => {
                                 <GridItem key={friend._id}>
                                     <Link to={`/users/${friend._id}`}>
                                         {friend.profilePic ? (
-                                            <img src={friend.profilePic} />
+                                            <ProfileImgFriend
+                                                src={friend.profilePic}
+                                            />
                                         ) : (
                                             <i className="fa-regular fa-circle-user"></i>
                                         )}

@@ -10,6 +10,15 @@ export default class PostsService {
             }
         );
     }
+    static async getPost(postId) {
+        return $api.get(
+            `posts/${postId}`,
+
+            {
+                withCredentials: true,
+            }
+        );
+    }
     static async getPostsReciever(userid) {
         return $api.get(
             `posts/users/${userid}/wall`,

@@ -195,8 +195,8 @@ export const MobileNav = ({
             </Link>
             <NavItem
                 onClick={() => {
-                    handleNavItem();
                     handleOpenSidePanel("Chats");
+                    handleNavItem();
                 }}
             >
                 {" "}
@@ -219,16 +219,16 @@ export const MobileNav = ({
             </NavItem>
             <NavItem
                 onClick={() => {
-                    handleNavItem();
                     handleOpenSidePanel("Friend requests");
+                    handleNavItem();
                 }}
             >
                 <i className="fas fa-user-friends"></i>Friend requests
             </NavItem>
             <NavItem
                 onClick={() => {
-                    handleNavItem();
                     handleOpenSidePanel("Notifications");
+                    handleNavItem();
                 }}
             >
                 {" "}

@@ -17,6 +17,7 @@ import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
 import { ChatProvider } from "./contexts/chatContext";
 import { connectSocket, disconnectFromSocket } from "./socket";
+import { PostPage } from "./pages/PostPage";
 
 const AppDiv = styled.div`
     display: flex;
@@ -52,9 +53,8 @@ function App() {
     useEffect(() => {
         //console.log(authState.user);
         if (authState.user?._id) {
-          //  connectSocket(authState.user._id);
+            //  connectSocket(authState.user._id);
         }
-       
     }, [authState.user]);
 
     if (authState.loading) {
@@ -108,6 +108,11 @@ function App() {
                                     exact
                                     index
                                     element={<Dashboard />}
+                                ></Route>
+                                <Route
+                                    exact
+                                    path={`/posts/:postid`}
+                                    element={<PostPage />}
                                 ></Route>
                                 <Route
                                     exact

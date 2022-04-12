@@ -14,6 +14,7 @@ import ConversationsService from "../services/ConversationsService";
 import { ChatContext } from "../contexts/chatContext";
 import EmailIcon from "@mui/icons-material/Email";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import useMediaQuery from "./../helpers/useMediaQuery";
 
 const NavBarContainer = styled.div`
     min-height: 60px;
@@ -145,6 +146,8 @@ export const NavBar = ({ toggleTheme }) => {
     const [requests, setRequests] = useState([]);
     const [notifications, setNotifications] = useState([]);
     const [chats, setChats] = useState([]);
+    const match = useMediaQuery("(max-width:890px)");
+    //console.log(match);
 
     async function getReq() {
         let res = await RequestsService.getRequests();
@@ -195,13 +198,36 @@ export const NavBar = ({ toggleTheme }) => {
         setActiveSidePannel(() => !activeSidePannel);
     }
 
+    useEffect(() => {
+        if (match) {
+            // if (activeSidePannel) {
+            //     stopScroll();
+            // } else {
+            //     startScroll();
+            // }
+            // toggleScroll()
+        }
+        return () => {};
+    }, [activeSidePannel]);
+
     const toggleScroll = () => {
         document.body.classList.toggle("stopScroll");
+        console.log("scroll");
+    };
+    const stopScroll = () => {
+        document.body.classList.add("stopScroll");
+        console.log("stop scroll");
+    };
+    const startScroll = () => {
+        document.body.classList.remove("stopScroll");
+        console.log(" start scroll");
     };
 
     const toggleMobile = () => {
         window.scroll(0, 0);
+      
         toggleScroll();
+      
         setShowMobileMenu(!showMobileMenu);
     };
     const handleSearch = (text) => {

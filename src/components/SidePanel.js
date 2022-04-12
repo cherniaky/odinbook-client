@@ -265,7 +265,8 @@ const SidePanel = ({
             case "Notifications":
                 return (
                     <ListFlex>
-                        {notifications.filter((not)=>not.sender._id != authId).length != 0 ? (
+                        {notifications.filter((not) => not.sender._id != authId)
+                            .length != 0 ? (
                             notifications.map((notification) => {
                                 return (
                                     <NotifyItem
@@ -278,7 +279,9 @@ const SidePanel = ({
                                             {"  "}
                                             {notification.senderName}
                                         </Link>{" "}
-                                        {notification.text}
+                                        <Link to={`/posts/${notification.post}`}>
+                                            {notification.text}
+                                        </Link>
                                     </NotifyItem>
                                 );
                             })
