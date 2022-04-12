@@ -275,12 +275,20 @@ const SidePanel = ({
                                         seen={notification.seen}
                                     >
                                         <Link
+                                            onClick={() => {
+                                                handleGetBack();
+                                            }}
                                             to={`/users/${notification.sender._id}`}
                                         >
                                             {"  "}
                                             {notification.senderName}
                                         </Link>{" "}
-                                        <Link to={`/posts/${notification.post}`}>
+                                        <Link
+                                            onClick={() => {
+                                                handleGetBack();
+                                            }}
+                                            to={`/posts/${notification.post}`}
+                                        >
                                             {notification.text}
                                         </Link>
                                     </NotifyItem>
