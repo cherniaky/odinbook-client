@@ -165,7 +165,17 @@ const ShowComments = styled.button`
 const ContentImg = styled.img`
     cursor: pointer;
     width: 100%;
-    height: 100%;
+    // height: 100%;
+    height: auto;
+   // max-height: 80vh;
+    margin-bottom: 5px;
+    border-radius: 5px;
+`;
+const ContentImgModal = styled.img`
+    cursor: pointer;
+    width: 100%;
+     height: 100%;
+    //height: auto;
     max-height: 80vh;
     margin-bottom: 5px;
     border-radius: 5px;
@@ -187,7 +197,7 @@ const ModalStyle = {
     p: 0,
 };
 
-const Post = ({ post, handleDeletePost }) => {
+const Post = ({ post, handleDeletePost, notDelete }) => {
     let {
         date,
         likes,
@@ -246,7 +256,7 @@ const Post = ({ post, handleDeletePost }) => {
                     </div>
                     <p>{makeDateAgo(date)} ago</p>
                 </PostUserInfo>
-                {user._id == authState.user._id ? (
+                {user._id == authState.user._id && !notDelete ? (
                     <i
                         onClick={async () => {
                             if (post.imgName) {
@@ -276,8 +286,7 @@ const Post = ({ post, handleDeletePost }) => {
                     aria-describedby="modal-modal-description"
                 >
                     <Box sx={ModalStyle}>
-                        {" "}
-                        <ContentImg src={post.img} />
+                        <ContentImgModal src={post.img} />
                     </Box>
                 </Modal>
                 {text}

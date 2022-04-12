@@ -38,7 +38,7 @@ export const PostPage = () => {
     // return <>Post </>;
     return (
         <>
-            <Post post={post} />
+            <Post post={post} notDelete={true} />
         </>
     );
 };
