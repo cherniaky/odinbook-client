@@ -24,7 +24,7 @@ export const PostPage = () => {
     }, [postid]);
 
     useEffect(() => {
-        console.log(post);
+       // console.log(post);
         return () => {};
     }, [post]);
     if (postdontexisr) {
