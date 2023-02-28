@@ -12,7 +12,7 @@ import { NotificationsProvider } from "./contexts/notifyContext";
 ReactDOM.render(
     <AuthProvider>
         <NotificationsProvider>
-            <Router basename="/odinbook-client">
+            <Router>
                 <App />
             </Router>
         </NotificationsProvider>
